@@ -16,8 +16,8 @@ install:
 
 # command to run tests
 script:
-  - pytest
+  - coverage run -m pytest
   - sphinx-build -WT -b dummy docs/ docs/_build/html
 
-# after_success:
-#   - coveralls
+after_success:
+  - coveralls
