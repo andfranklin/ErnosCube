@@ -1,2 +1,2 @@
 # ErnosCube
-Another Rubik's Cube simulator because ¯\_(ツ)_/¯
+Another Rubik's Cube simulator because ¯\\_(ツ)_/¯
