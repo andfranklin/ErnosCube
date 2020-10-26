@@ -105,7 +105,7 @@ To run tests:
 
 .. code-block:: console
 
-  pytest test
+  pytest
 
 
 To run a subset of tests
@@ -130,12 +130,6 @@ the command line by:
 
 .. code-block:: console
 
-  python setup.py test --addopts <command>
-
-or,
-
-.. code-block:: console
-
   pytest <command>
 
 See `pytest`_ for more information.
@@ -145,14 +139,23 @@ See `pytest`_ for more information.
 Coverage
 --------
 
-To get a coverage report use the command:
+To get a coverage report first make sure that `pytestcov`_ is installed. Then, use the command:
 
 .. code-block:: console
 
-  python setup.py test coverage
+  pytest --cov
 
 To get a more detailed html coverage report:
 
 .. code-block:: console
 
-  python setup.py test coverage_html
+  pytest --cov --no-cov-on-fail
+
+While debugging tests it might be useful to use the flag :bash:`--no-cov-on-fail`
+to suppress coverage when a test is failing. To see more info about CL options:
+
+.. code-block:: console
+
+  pytest --help
+
+.. _pytestcov: https://pytest-cov.readthedocs.io/en/latest/readme.html
