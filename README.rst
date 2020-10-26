@@ -1,3 +1,8 @@
+|Build|
+
+.. |Build| image:: https://travis-ci.org/andfranklin/ErnosCube.svg?branch=main
+    :target: https://travis-ci.org/andfranklin/ErnosCube
+
 =========
 ErnosCube
 =========
