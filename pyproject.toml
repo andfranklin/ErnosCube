@@ -6,15 +6,18 @@
 [tool.black]
 line-length = 88
 target-version = ['py38']
-include = '''
-/(
-    src/ErnosCube
-  | tests
-  | docs
-)/
-'''
+include = '\.pyi?$'
 exclude = '''
 /(
-    __pycache__
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
 )/
 '''
