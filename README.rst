@@ -13,8 +13,8 @@ ErnosCube
 Another Rubik's Cube simulator because ¯\\_(ツ)_/¯
 
 
-Feature
--------
+Features
+--------
 
 * Free software: MIT license
 * Can return a "hello world" string.
