@@ -2,6 +2,13 @@ from enum import Enum
 
 
 class FaceEnum(Enum):
+    """An Enum describing the face of a cube.
+
+    This is used in two locations: 1) in stickers it is used to
+    mark the initial face that they belong to, 2) in the cube
+    to manage the faces.
+    """
+
     FRONT = 0  # classically green
     RIGHT = 1  # classically red
     BACK = 2   # classically yellow
@@ -13,7 +20,7 @@ class FaceEnum(Enum):
     def get_enum(thing):
         if isinstance(thing, FaceEnum):
             return thing
-        if isinstance(thing, str):
+        elif isinstance(thing, str):
             return FaceEnum[thing.upper()]
         elif isinstance(thing, int):
             return FaceEnum(thing)

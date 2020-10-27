@@ -21,6 +21,11 @@ class TestFaceEnum:
             FaceEnum.get_enum("blob")
 
 
+    def test_get_enum_failure_3(self):
+        with pytest.raises(Exception):
+            FaceEnum.get_enum(123.456)
+
+
     def test_items(self):
         assert len(FaceEnum.items()) == 6
 
@@ -33,3 +38,17 @@ class TestFaceEnum:
     def test_get_str(self):
         for _, enum in FaceEnum.items():
             assert FaceEnum.get_str(enum) == enum.name
+
+
+    def is_term_color_correct(self, enum, gold):
+        value = enum.get_terminal_color()
+        assert isinstance(value, str)
+        assert value == gold
+
+    def test_get_terminal_color(self):
+        self.is_term_color_correct(FaceEnum.FRONT, "green")
+        self.is_term_color_correct(FaceEnum.RIGHT, "red")
+        self.is_term_color_correct(FaceEnum.BACK, "yellow")
+        self.is_term_color_correct(FaceEnum.LEFT, "magenta")
+        self.is_term_color_correct(FaceEnum.UP, "white")
+        self.is_term_color_correct(FaceEnum.DOWN, "blue")
