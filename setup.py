@@ -19,17 +19,17 @@ if sys.version_info < (3,):
     raise ImportError(error_str)
 
 
-with open('README.rst') as readme_file:
+with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-with open('requirements.txt') as requirements_file:
+with open("requirements.txt") as requirements_file:
     requirements = [line.rstrip() for line in requirements_file]
     print(requirements)
 
-with open('requirements_test.txt') as test_requirements_file:
+with open("requirements_test.txt") as test_requirements_file:
     test_requirements = [line.rstrip() for line in test_requirements_file]
 
 setup(
@@ -53,10 +53,10 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8"
+        "Programming Language :: Python :: 3.8",
     ],
     test_suite="tests",
     tests_require=test_requirements,
     setup_requires=test_requirements,
-    python_requires='>=3.8'
+    python_requires=">=3.8",
 )

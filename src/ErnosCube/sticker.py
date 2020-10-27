@@ -5,7 +5,7 @@ from termcolor import colored
 class Sticker(PlaneRotatable):
     """The sticker class for a Rubik's Cube.
 
-    The face of every Rubik's Cube is made-up of a bunch of stickers. 
+    The face of every Rubik's Cube is made-up of a bunch of stickers.
     """
 
     def __init__(self, init_face_enum, orient_enum):
@@ -35,7 +35,7 @@ class Sticker(PlaneRotatable):
 
     def __repr__(self):
         color = self.init_face_enum.get_terminal_color()
-        attrs = ['bold', 'reverse']
+        attrs = ["bold", "reverse"]
         raw_repr = self._get_raw_repr()
         return colored(raw_repr, color, attrs=attrs)
 
