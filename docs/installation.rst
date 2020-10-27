@@ -86,16 +86,20 @@ in the installation.
 
   pip install -e .
 
-This should be more robust than the base version of CoolProp. If desired you
-can install the dev and test requirements by:
+If desired you can install the dev, test, and doc requirements, respectivelly, by:
 
 .. code-block:: console
 
-  pip install -r requirements_test.txt
   pip install -r requirements_dev.txt
+  pip install -r requirements_test.txt
+  pip install -r docs/requirements.txt
 
-These are useful if you're debugging issues related to CI, or if you want more
-details from testing.
+Finally, install the `pre-commit` hooks before commiting anything to ensure
+a smooth development process:
+
+.. code-block:: console
+
+  pre-commit install
 
 
 Testing
