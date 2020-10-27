@@ -11,10 +11,10 @@ class FaceEnum(Enum):
 
     FRONT = 0  # classically green
     RIGHT = 1  # classically red
-    BACK = 2   # classically yellow
-    LEFT = 3   # classically orange
-    UP = 4     # classically white
-    DOWN = 5   # classically blue
+    BACK = 2  # classically yellow
+    LEFT = 3  # classically orange
+    UP = 4  # classically white
+    DOWN = 5  # classically blue
 
     @staticmethod
     def get_enum(thing):
