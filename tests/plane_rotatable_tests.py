@@ -13,7 +13,12 @@ class PlaneRotatableTests:
     """
 
     @given(data())
-    def test_copyability_and_equality(self, data):
+    def test_copyability(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        deepcopy(obj)
+
+    @given(data())
+    def test_equality(self, data):
         obj = data.draw(self.plane_rotatable_objs)
         obj_copy = deepcopy(obj)
         assert obj == obj_copy
