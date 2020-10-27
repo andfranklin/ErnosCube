@@ -149,7 +149,7 @@ To get a more detailed html coverage report:
 
 .. code-block:: console
 
-  pytest --cov --no-cov-on-fail
+  pytest --cov --cov-report=html
 
 While debugging tests it might be useful to use the flag :bash:`--no-cov-on-fail`
 to suppress coverage when a test is failing. To see more info about CL options:
