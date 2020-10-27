@@ -1,7 +1,8 @@
 from enum import Enum
+from .rotatable import Rotatable, EnumABCMeta
 
 
-class OrientEnum(Enum):
+class OrientEnum(Rotatable, Enum, metaclass=EnumABCMeta):
     UP = 0
     DOWN = 1
     LEFT = 2
