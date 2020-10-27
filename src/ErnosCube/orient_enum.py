@@ -1,8 +1,11 @@
 from enum import Enum
-from .rotatable import Rotatable, EnumABCMeta
+from .plane_rotatable import PlaneRotatable
+from .enum_abc_meta import EnumABCMeta
 
 
-class OrientEnum(Rotatable, Enum, metaclass=EnumABCMeta):
+class OrientEnum(PlaneRotatable, Enum, metaclass=EnumABCMeta):
+    """An Enum describing the orientation of a sticker."""
+
     UP = 0
     DOWN = 1
     LEFT = 2

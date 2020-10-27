@@ -1,10 +1,10 @@
-from hypothesis.strategies import sampled_from
-from rotatable_tests import RotatableTests
 from ErnosCube.orient_enum import OrientEnum
+from plane_rotatable_tests import PlaneRotatableTests
+from strategies import orient_enums
 
 
-class TestOrientEnum(RotatableTests):
-    rotatable_objs = sampled_from(list(OrientEnum.__members__.values()))
+class TestOrientEnum(PlaneRotatableTests):
+    plane_rotatable_objs = orient_enums
 
     def test_repr(self):
         assert repr(OrientEnum.UP) == "↑"
