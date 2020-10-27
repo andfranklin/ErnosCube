@@ -16,7 +16,7 @@ install:
 
 # command to run tests
 script:
-  - coverage run --source=src/ErnosCube -m pytest --cov=src/ErnosCube
+  - coverage run --source=src/ErnosCube -m pytest --cov
   - python -m sphinx -WT -b dummy docs/ docs/_build/html
 
 after_success:
