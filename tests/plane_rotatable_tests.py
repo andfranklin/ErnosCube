@@ -1,16 +1,39 @@
 from hypothesis import given
 from hypothesis.strategies import data
 from copy import deepcopy
+from abc import ABC, abstractmethod
 
 
-class PlaneRotatableTests:
+class PlaneRotatableTests(ABC):
     """A test suite of property tests for PlaneRotatable classes of objects.
 
     This class implements a suit of general tests that all rotatable objects
     are expected to pass. A test suit for a specific rotatable class can
     incorporate this tests by inheriting this class and by specifying the
     member variable `plane_rotatable_objs` with a hypothesis strategy.
+
+    Classes that inherit from this class are also expected to implement
+    appropriate tests for `test_rotate_cw`, `test_rotate_ccw`, and
+    `test_rotate_ht`. The design is such that once each of the rotation methods
+    are sufficiently tested for some ground case(s), then randomized property
+    based tests done with hypothesis will provide confidence about the
+    correctness of the rotation methods.
+
+    The implementations of `test_rotate_cw`, `test_rotate_ccw`, and
+    `test_rotate_ht` should be as straightforward and hard coded as possible.
     """
+
+    @abstractmethod
+    def test_rotate_cw(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def test_rotate_ccw(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def test_rotate_ht(self):
+        raise NotImplementedError
 
     @given(data())
     def test_copyability(self, data):

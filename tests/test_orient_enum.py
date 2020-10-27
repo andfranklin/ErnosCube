@@ -1,4 +1,5 @@
 from ErnosCube.orient_enum import OrientEnum
+
 from plane_rotatable_tests import PlaneRotatableTests
 from strategies import orient_enums
 

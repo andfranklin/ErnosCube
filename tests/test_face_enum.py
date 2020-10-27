@@ -1,5 +1,5 @@
-import pytest
 from ErnosCube.face_enum import FaceEnum
+from pytest import raises
 
 
 class TestFaceEnum:
@@ -12,15 +12,15 @@ class TestFaceEnum:
         assert FaceEnum.get_enum(5) == FaceEnum.get_enum("down")
 
     def test_get_enum_failure_1(self):
-        with pytest.raises(Exception):
+        with raises(Exception):
             FaceEnum.get_enum(-1)
 
     def test_get_enum_failure_2(self):
-        with pytest.raises(Exception):
+        with raises(Exception):
             FaceEnum.get_enum("blob")
 
     def test_get_enum_failure_3(self):
-        with pytest.raises(Exception):
+        with raises(Exception):
             FaceEnum.get_enum(123.456)
 
     def test_items(self):
