@@ -4,11 +4,11 @@ ErnosCube
 
 |Build| |Coverage| |Documentation|
 
-.. |Build| image:: https://travis-ci.org/andfranklin/ErnosCube.svg?branch=main
+.. |Build| image:: https://travis-ci.org/andfranklin/ErnosCube.svg?branch=master
     :target: https://travis-ci.org/andfranklin/ErnosCube
 
-.. |Coverage| image:: https://coveralls.io/repos/github/andfranklin/ErnosCube/badge.svg?branch=main
-    :target: https://coveralls.io/github/andfranklin/ErnosCube?branch=main
+.. |Coverage| image:: https://coveralls.io/repos/github/andfranklin/ErnosCube/badge.svg?branch=master
+    :target: https://coveralls.io/github/andfranklin/ErnosCube?branch=master
 
 .. |Documentation| image:: https://readthedocs.org/projects/ernoscube/badge/?version=latest
     :target: https://ernoscube.readthedocs.io/en/latest/?badge=latest
