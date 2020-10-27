@@ -10,12 +10,12 @@ class PlaneRotatable(ABC):
 
     @abstractmethod
     def rotate_cw(self):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def rotate_ccw(self):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def rotate_ht(self):
-        pass
+        raise NotImplementedError

@@ -1,0 +1,27 @@
+# See the following for info about this file:
+# https://coverage.readthedocs.io/en/latest/config.html
+
+[run]
+# Runs branch coverage
+branch = True
+
+[report]
+# The number of digits after the decimal point to display in the report
+precision = 2
+
+# Don’t include empty files (those that have 0 statements) in the report.
+# This will exclude all those empty `__init__.py` files from the report.
+skip_empty = True
+
+exclude_lines =
+    # Don't complain if tests don't hit defensive assertion code:
+    raise NotImplementedError
+
+# Sort the text report from least covered to most covered.
+sort = Cover
+
+#  File name patterns not included in the report
+omit = tests/*
+
+[html]
+title = ErnosCube's Coverage

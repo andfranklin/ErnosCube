@@ -20,6 +20,27 @@ class PlaneRotatableTests:
 
 
     @given(data())
+    def test_cw_invertability(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        gold = deepcopy(obj)
+        assert obj.rotate_cw().rotate_cw().rotate_cw().rotate_cw() == gold
+
+
+    @given(data())
+    def test_ccw_invertability(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        gold = deepcopy(obj)
+        assert obj.rotate_ccw().rotate_ccw().rotate_ccw().rotate_ccw() == gold
+
+
+    @given(data())
+    def test_ht_invertability(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        gold = deepcopy(obj)
+        assert obj.rotate_ht().rotate_ht() == gold
+
+
+    @given(data())
     def test_cw_ccw_invertability(self, data):
         obj = data.draw(self.plane_rotatable_objs)
         gold = deepcopy(obj)
@@ -27,38 +48,15 @@ class PlaneRotatableTests:
         assert obj.rotate_ccw().rotate_cw() == gold
 
 
-    # @given(sampled_from(all_orient_enums))
-    # def test_cw_invertability(enum):
-    #     obj = data.draw(self.plane_rotatable_objs)
-    #     gold = deepcopy(obj)
-    #     assert enum.rotate_cw().rotate_cw().rotate_cw().rotate_cw() == enum
+    @given(data())
+    def test_ht_2cw_equivalence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj)
+        assert obj.rotate_ht() == obj_copy.rotate_cw().rotate_cw()
 
 
-    # @given(sampled_from(all_orient_enums))
-    # def test_ccw_invertability(enum):
-    #     obj = data.draw(self.plane_rotatable_objs)
-    #     gold = deepcopy(obj)
-    #     assert enum.rotate_ccw().rotate_ccw().rotate_ccw().rotate_ccw() == enum
-
-    # @given(sampled_from(all_orient_enums))
-    # def test_ht_invertability(enum):
-    #     obj = data.draw(self.plane_rotatable_objs)
-    #     gold = deepcopy(obj)
-    #     assert enum.rotate_ht().rotate_ht() == enum
-
-
-
-
-
-    # @given(sampled_from(all_orient_enums))
-    # def test_cw_ht_equivalence(enum):
-    #     obj = data.draw(self.plane_rotatable_objs)
-    #     gold = deepcopy(obj)
-    #     assert enum.rotate_cw().rotate_cw() == enum.rotate_ht()
-
-
-    # @given(sampled_from(all_orient_enums))
-    # def test_ccw_ht_equivalence(enum):
-    #     obj = data.draw(self.plane_rotatable_objs)
-    #     gold = deepcopy(obj)
-    #     assert enum.rotate_ccw().rotate_ccw() == enum.rotate_ht()
+    @given(data())
+    def test_ht_2ccw_equivalence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj)
+        assert obj.rotate_ht() == obj_copy.rotate_ccw().rotate_ccw()
