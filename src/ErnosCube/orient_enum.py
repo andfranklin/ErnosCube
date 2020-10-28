@@ -11,6 +11,9 @@ class OrientEnum(PlaneRotatable, Enum, metaclass=EnumABCMeta):
     LEFT = 2
     RIGHT = 3
 
+    def __eq__(self, other):
+        return super(Enum).__eq__(other)
+
     def rotate_cw(self):
         if self == OrientEnum.UP:
             return OrientEnum.RIGHT

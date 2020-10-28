@@ -9,6 +9,13 @@ class PlaneRotatable(ABC):
     """
 
     @abstractmethod
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    @abstractmethod
     def rotate_cw(self):
         raise NotImplementedError
 

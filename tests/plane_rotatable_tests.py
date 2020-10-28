@@ -47,6 +47,24 @@ class PlaneRotatableTests(ABC):
         assert obj == obj_copy
 
     @given(data())
+    def test_cw_non_idempotence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj).rotate_cw()
+        assert obj != obj_copy
+
+    @given(data())
+    def test_ccw_non_idempotence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj).rotate_ccw()
+        assert obj != obj_copy
+
+    @given(data())
+    def test_ht_non_idempotence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj).rotate_ht()
+        assert obj != obj_copy
+
+    @given(data())
     def test_cw_invertability(self, data):
         obj = data.draw(self.plane_rotatable_objs)
         gold = deepcopy(obj)
@@ -82,3 +100,15 @@ class PlaneRotatableTests(ABC):
         obj = data.draw(self.plane_rotatable_objs)
         obj_copy = deepcopy(obj)
         assert obj.rotate_ht() == obj_copy.rotate_ccw().rotate_ccw()
+
+    @given(data())
+    def test_3cw_ccw_equivalence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj)
+        assert obj.rotate_cw().rotate_cw().rotate_cw() == obj_copy.rotate_ccw()
+
+    @given(data())
+    def test_3ccw_cw_equivalence(self, data):
+        obj = data.draw(self.plane_rotatable_objs)
+        obj_copy = deepcopy(obj)
+        assert obj.rotate_ccw().rotate_ccw().rotate_ccw() == obj_copy.rotate_cw()
