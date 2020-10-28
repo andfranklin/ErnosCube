@@ -10,13 +10,13 @@ face_enums = sampled_from(list(FaceEnum.__members__.values()))
 stickers = builds(Sticker, face_enums, orient_enums)
 
 
-def generate_random_face_strategy(n):
-    random_sticker_row = lists(stickers, min_size=n, max_size=n)
-    random_sticker_mat = lists(random_sticker_row, min_size=n, max_size=n)
-    return builds(Face, random_sticker_mat)
+def generate_faces_strategy(n):
+    sticker_row = lists(stickers, min_size=n, max_size=n)
+    sticker_mat = lists(sticker_row, min_size=n, max_size=n)
+    return builds(Face, sticker_mat)
 
 
-random_1_faces = generate_random_face_strategy(1)
-random_2_faces = generate_random_face_strategy(2)
-random_3_faces = generate_random_face_strategy(3)
-random_faces = one_of(random_1_faces, random_2_faces, random_3_faces)
+faces_1 = generate_faces_strategy(1)
+faces_2 = generate_faces_strategy(2)
+faces_3 = generate_faces_strategy(3)
+faces = one_of(faces_1, faces_2, faces_3)
