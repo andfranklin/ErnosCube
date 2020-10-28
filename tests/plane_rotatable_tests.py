@@ -108,28 +108,6 @@ class PlaneRotatableTests(ABC):
         else:
             assert a != b
 
-    @mark.dependency(depends=["objs_minus_c4", "inequality"])
-    @given(data())
-    def test_cw_non_idempotence(self, data):
-        obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj).rotate_cw()
-        assert obj != obj_copy
-
-    @mark.dependency(depends=["objs_minus_c4", "inequality"])
-    @given(data())
-    def test_ccw_non_idempotence(self, data):
-        obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj).rotate_ccw()
-        assert obj != obj_copy
-
-    @reproduce_failure("5.38.1", b"AAEAAQAAAAEAAA==")
-    @mark.dependency(depends=["objs_minus_c2", "inequality"])
-    @given(data())
-    def test_ht_non_idempotence(self, data):
-        obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj).rotate_ht()
-        assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
-
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_cw_invertability(self, data):
@@ -186,3 +164,25 @@ class PlaneRotatableTests(ABC):
         obj = data.draw(self.objs)
         obj_copy = deepcopy(obj)
         assert obj.rotate_ccw().rotate_ccw().rotate_ccw() == obj_copy.rotate_cw()
+
+    @mark.dependency(depends=["objs_minus_c4", "inequality"])
+    @given(data())
+    def test_cw_non_idempotence(self, data):
+        obj = data.draw(self.objs)
+        obj_copy = deepcopy(obj).rotate_cw()
+        assert obj != obj_copy
+
+    @mark.dependency(depends=["objs_minus_c4", "inequality"])
+    @given(data())
+    def test_ccw_non_idempotence(self, data):
+        obj = data.draw(self.objs)
+        obj_copy = deepcopy(obj).rotate_ccw()
+        assert obj != obj_copy
+
+    @reproduce_failure("5.38.1", b"AAEAAQAAAAEAAA==")
+    @mark.dependency(depends=["objs_minus_c2", "inequality"])
+    @given(data())
+    def test_ht_non_idempotence(self, data):
+        obj = data.draw(self.objs)
+        obj_copy = deepcopy(obj).rotate_ht()
+        assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
