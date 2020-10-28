@@ -10,8 +10,12 @@ class Face:
 
     def __init__(self, stickers):
         self.N = len(stickers)
+        assert self.N > 0
         assert all(len(row) == self.N for row in stickers)
         self.stickers = stickers
+
+    def __str__(self):
+        return f"Face(N={self.N})"
 
 
 def construct_face_from_enum(face_enum, N=3):

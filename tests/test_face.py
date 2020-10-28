@@ -3,6 +3,7 @@ from ErnosCube.face import Face, construct_face_from_enum
 from strategies import stickers, face_enums
 from hypothesis.strategies import data
 from hypothesis import given
+from strategies import random_faces
 
 
 class TestFace:
@@ -40,3 +41,8 @@ class TestFace:
         assert face.N == 3
         for row in face.stickers:
             assert all(sticker.init_face_enum == face_enum for sticker in row)
+
+    @given(random_faces)
+    def test_str(self, face):
+        gold = f"Face(N={face.N})"
+        assert str(face) == gold
