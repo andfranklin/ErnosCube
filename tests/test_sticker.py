@@ -16,7 +16,7 @@ class TestSticker(PlaneRotatableTests):
     the rotations for `Sticker` should naturally work.
     """
 
-    plane_rotatable_objs = stickers
+    objs = stickers
 
     def test_rotate_cw(self):
         sticker = Sticker(FaceEnum.FRONT, OrientEnum.UP)

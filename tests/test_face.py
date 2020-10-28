@@ -12,7 +12,7 @@ import pytest
 class TestFace(PlaneRotatableTests):
     """Collection of all tests run on instances of the Face Class."""
 
-    plane_rotatable_objs = faces
+    objs = faces
 
     @given(stickers)
     def test_construction_1(self, sticker):
