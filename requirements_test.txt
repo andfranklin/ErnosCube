@@ -1,5 +1,6 @@
 pytest>=6.1
 coverage>=5.3
 pytest-cov>=2.10
+pytest-dependency>=0.5
 hypothesis>=5.38
 coveralls>=2.1
