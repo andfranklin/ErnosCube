@@ -17,7 +17,11 @@ from hypothesis import given
 class FaceSlicesTests(PlaneRotatableTests):
     """Collection of all tests run on all instances of the FaceSlices Class."""
 
-    @mark.dependency(name="construction")
+    @mark.dependency(name="class")
+    def test_class_def(self):
+        assert self.class_ is not None
+
+    @mark.dependency(name="construction", depends=["class"])
     @given(sticker_lists)
     def test_construction(self, sticker_list):
         face_slice = self.class_(sticker_list)
@@ -40,7 +44,7 @@ class FaceSlicesTests(PlaneRotatableTests):
         face_stickers.append([cs, s3, cs])
         return Face(face_stickers)
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(depends=["construction", "class"])
     def test_construction_from_face(self, face, stickers):
         face_slice = self.class_.from_face(face, 1)
         assert all(a == b for a, b in zip(face_slice.stickers, stickers))
