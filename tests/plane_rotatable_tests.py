@@ -94,7 +94,7 @@ class PlaneRotatableTests(ABC):
     def test_equality(self, data):
         obj = data.draw(self.objs)
         obj_copy = deepcopy(obj)
-        assert obj == obj_copy
+        assert obj == obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(name="inequality", depends=["equality"])
     @given(data())
@@ -102,80 +102,94 @@ class PlaneRotatableTests(ABC):
         a = data.draw(self.objs)
         b = data.draw(self.objs)
         if a == b:
-            assert not a != b
+            assert (
+                not a != b
+            ), f"failed for {str(a)}\n{repr(a)}\nand {str(b)}\n{repr(b)}"
         else:
-            assert a != b
+            assert a != b, f"failed for {str(a)}\n{repr(a)}\nand {str(b)}\n{repr(b)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_cw_invertability(self, data):
         obj = data.draw(self.objs)
         gold = deepcopy(obj)
-        assert obj.rotate_cw().rotate_cw().rotate_cw().rotate_cw() == gold
+        obj = obj.rotate_cw().rotate_cw().rotate_cw().rotate_cw()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_ccw_invertability(self, data):
         obj = data.draw(self.objs)
         gold = deepcopy(obj)
-        assert obj.rotate_ccw().rotate_ccw().rotate_ccw().rotate_ccw() == gold
+        obj = obj.rotate_ccw().rotate_ccw().rotate_ccw().rotate_ccw()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_ht_invertability(self, data):
         obj = data.draw(self.objs)
         gold = deepcopy(obj)
-        assert obj.rotate_ht().rotate_ht() == gold
+        assert (
+            obj.rotate_ht().rotate_ht() == gold
+        ), f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_cw_ccw_invertability(self, data):
         obj = data.draw(self.objs)
         gold = deepcopy(obj)
-        assert obj.rotate_cw().rotate_ccw() == gold
-        assert obj.rotate_ccw().rotate_cw() == gold
+        assert (
+            obj.rotate_cw().rotate_ccw() == gold
+        ), f"failed for {str(obj)}\n{repr(obj)}"
+        assert (
+            obj.rotate_ccw().rotate_cw() == gold
+        ), f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_ht_2cw_equivalence(self, data):
         obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj)
-        assert obj.rotate_ht() == obj_copy.rotate_cw().rotate_cw()
+        gold = deepcopy(obj).rotate_cw().rotate_cw()
+        obj = obj.rotate_ht()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_ht_2ccw_equivalence(self, data):
         obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj)
-        assert obj.rotate_ht() == obj_copy.rotate_ccw().rotate_ccw()
+        gold = deepcopy(obj).rotate_ccw().rotate_ccw()
+        obj = obj.rotate_ht()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_3cw_ccw_equivalence(self, data):
         obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj)
-        assert obj.rotate_cw().rotate_cw().rotate_cw() == obj_copy.rotate_ccw()
+        gold = deepcopy(obj).rotate_ccw()
+        obj = obj.rotate_cw().rotate_cw().rotate_cw()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["equality"])
     @given(data())
     def test_3ccw_cw_equivalence(self, data):
         obj = data.draw(self.objs)
-        obj_copy = deepcopy(obj)
-        assert obj.rotate_ccw().rotate_ccw().rotate_ccw() == obj_copy.rotate_cw()
+        gold = deepcopy(obj).rotate_cw()
+        obj = obj.rotate_ccw().rotate_ccw().rotate_ccw()
+        assert obj == gold, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["objs_minus_c4", "inequality"])
     @given(data())
     def test_cw_non_idempotence(self, data):
         obj = data.draw(self.objs_minus_c4)
         obj_copy = deepcopy(obj).rotate_cw()
-        assert obj != obj_copy
+        assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["objs_minus_c4", "inequality"])
     @given(data())
     def test_ccw_non_idempotence(self, data):
         obj = data.draw(self.objs_minus_c4)
         obj_copy = deepcopy(obj).rotate_ccw()
-        assert obj != obj_copy
+        assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
 
     @mark.dependency(depends=["objs_minus_c2", "inequality"])
     @given(data())
