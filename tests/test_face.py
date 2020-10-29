@@ -7,7 +7,7 @@ from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given, example
 from hypothesis.strategies import data
 from strategies import stickers, face_enums
-from strategies import faces, faces_minus_c2, faces_minus_c4
+from face_strategies import faces, faces_minus_c2, faces_minus_c4
 from copy import deepcopy
 from pytest import mark
 
