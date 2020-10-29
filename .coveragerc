@@ -16,6 +16,7 @@ skip_empty = True
 exclude_lines =
     # Don't complain if tests don't hit defensive assertion code:
     raise NotImplementedError
+    pass
 
 # Sort the text report from least covered to most covered.
 sort = Cover
