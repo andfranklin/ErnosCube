@@ -21,27 +21,23 @@ class TestSticker(PlaneRotatableTests):
     objs_minus_c2 = stickers
     objs_minus_c4 = stickers
 
-    @mark.dependency(name="construction")
     @given(face_enums, orient_enums)
-    def test_construction(self, face_enum, orient_enum):
+    def construction_test(self, face_enum, orient_enum):
         Sticker(face_enum, orient_enum)
 
-    @mark.dependency(depends=["construction"])
-    def test_rotate_cw(self):
+    def rotate_cw_test(self):
         sticker = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         sticker.rotate_cw()
         assert sticker.init_face_enum == FaceEnum.FRONT
         assert sticker.orient_enum == OrientEnum.RIGHT
 
-    @mark.dependency(depends=["construction"])
-    def test_rotate_ccw(self):
+    def rotate_ccw_test(self):
         sticker = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         sticker.rotate_ccw()
         assert sticker.init_face_enum == FaceEnum.FRONT
         assert sticker.orient_enum == OrientEnum.LEFT
 
-    @mark.dependency(depends=["construction"])
-    def test_rotate_ht(self):
+    def rotate_ht_test(self):
         sticker = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         sticker.rotate_ht()
         assert sticker.init_face_enum == FaceEnum.FRONT

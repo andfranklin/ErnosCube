@@ -19,9 +19,8 @@ class TestFace(PlaneRotatableTests):
     objs_minus_c2 = faces_minus_c2
     objs_minus_c4 = faces_minus_c4
 
-    @mark.dependency(name="construction")
     @given(sticker_matrices)
-    def test_construction(self, sticker_matrix):
+    def construction_test(self, sticker_matrix):
         face = Face(sticker_matrix)
         assert face.N == len(sticker_matrix)
 
@@ -55,7 +54,7 @@ class TestFace(PlaneRotatableTests):
         face = Face.from_face_enum(FaceEnum.FRONT, N=3)
         assert face.get_raw_repr_size() == 9
 
-    def test_rotate_cw(self):
+    def rotate_cw_test(self):
         stickers = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
@@ -92,7 +91,7 @@ class TestFace(PlaneRotatableTests):
             comp_face.rotate_cw() == cw_comp_face
         ), f"failed for {str(comp_face)}\n{repr(comp_face)}"
 
-    def test_rotate_ccw(self):
+    def rotate_ccw_test(self):
         ccw_stickers = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
@@ -129,7 +128,7 @@ class TestFace(PlaneRotatableTests):
             comp_face.rotate_ccw() == ccw_comp_face
         ), f"failed for {str(comp_face)}\n{repr(comp_face)}"
 
-    def test_rotate_ht(self):
+    def rotate_ht_test(self):
         stickers = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
