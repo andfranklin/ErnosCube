@@ -16,6 +16,14 @@ class Face(PlaneRotatable):
         assert all(len(row) == self.N for row in stickers)
         self.stickers = stickers
 
+    @classmethod
+    def from_face_enum(cls, face_enum, N=3):
+        assert N > 0
+        stickers = []
+        for _ in range(N):
+            stickers.append([Sticker(face_enum, OrientEnum.UP) for _ in range(N)])
+        return cls(stickers)
+
     def __str__(self):
         return f"Face(N={self.N})"
 
@@ -70,11 +78,3 @@ class Face(PlaneRotatable):
                 new_stickers[new_row][new_col] = sticker
         self.stickers = new_stickers
         return self
-
-
-def construct_face_from_enum(face_enum, N=3):
-    assert N > 0
-    stickers = []
-    for _ in range(N):
-        stickers.append([Sticker(face_enum, OrientEnum.UP) for _ in range(N)])
-    return Face(stickers)

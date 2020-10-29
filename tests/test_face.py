@@ -1,7 +1,7 @@
 from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
 from ErnosCube.sticker import Sticker
-from ErnosCube.face import Face, construct_face_from_enum
+from ErnosCube.face import Face
 
 from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given, example
@@ -25,24 +25,24 @@ class TestFace(PlaneRotatableTests):
         face = Face(sticker_matrix)
         assert face.N == len(sticker_matrix)
 
-    @mark.dependency(name="construct_face_from_enum", depends=["construction"])
+    @mark.dependency(name="construction_from_face_enum", depends=["construction"])
     @given(face_enums)
-    def test_construct_face_from_enum(self, face_enum):
-        face = construct_face_from_enum(face_enum)
+    def test_construction_from_face_enum(self, face_enum):
+        face = Face.from_face_enum(face_enum)
         assert face.N == 3
         for row in face.stickers:
             assert all(sticker.init_face_enum == face_enum for sticker in row)
 
-    @mark.dependency(depends=["construct_face_from_enum"])
+    @mark.dependency(depends=["construction_from_face_enum"])
     @given(faces)
-    @example(construct_face_from_enum(FaceEnum.FRONT, N=3))
+    @example(Face.from_face_enum(FaceEnum.FRONT, N=3))
     def test_str(self, face):
         gold = f"Face(N={face.N})"
         assert str(face) == gold
 
-    @mark.dependency(depends=["construct_face_from_enum"])
+    @mark.dependency(depends=["construction_from_face_enum"])
     def test_repr(self):
-        face = construct_face_from_enum(FaceEnum.FRONT, N=3)
+        face = Face.from_face_enum(FaceEnum.FRONT, N=3)
         gold = "\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
         gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\n\x1b[7m\x1b[1m\x1b[32m ↑"
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
@@ -50,9 +50,9 @@ class TestFace(PlaneRotatableTests):
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m"
         assert repr(face) == gold, f"{repr(face)}: {repr(repr(face))}"
 
-    @mark.dependency(depends=["construct_face_from_enum"])
+    @mark.dependency(depends=["construction_from_face_enum"])
     def test_get_raw_repr_size(self):
-        face = construct_face_from_enum(FaceEnum.FRONT, N=3)
+        face = Face.from_face_enum(FaceEnum.FRONT, N=3)
         assert face.get_raw_repr_size() == 9
 
     def test_rotate_cw(self):
