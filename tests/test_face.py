@@ -6,8 +6,8 @@ from ErnosCube.face import Face, construct_face_from_enum
 from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given, example
 from hypothesis.strategies import data
-from strategies import stickers, face_enums
-from face_strategies import faces, faces_minus_c2, faces_minus_c4
+from strategies import face_enums, stickers, sticker_matrices
+from strategies_face import faces, faces_minus_c2, faces_minus_c4
 from copy import deepcopy
 from pytest import mark
 
@@ -19,40 +19,13 @@ class TestFace(PlaneRotatableTests):
     objs_minus_c2 = faces_minus_c2
     objs_minus_c4 = faces_minus_c4
 
-    @mark.dependency(name="construction_1")
-    @given(stickers)
-    def test_construction_1(self, sticker):
-        face = Face([[sticker]])
-        assert face.N == 1
-        # assert False
+    @mark.dependency(name="construction")
+    @given(sticker_matrices)
+    def test_construction_1(self, sticker_matrix):
+        face = Face(sticker_matrix)
+        assert face.N == len(sticker_matrix)
 
-    @mark.dependency(name="construction_2")
-    @given(data())
-    def test_construction_2(self, data):
-        face = Face(
-            [
-                [data.draw(stickers), data.draw(stickers)],
-                [data.draw(stickers), data.draw(stickers)],
-            ]
-        )
-        assert face.N == 2
-
-    @mark.dependency(name="construction_3")
-    @given(data())
-    def test_construction_3(self, data):
-        face = Face(
-            [
-                [data.draw(stickers), data.draw(stickers), data.draw(stickers)],
-                [data.draw(stickers), data.draw(stickers), data.draw(stickers)],
-                [data.draw(stickers), data.draw(stickers), data.draw(stickers)],
-            ]
-        )
-        assert face.N == 3
-
-    @mark.dependency(
-        name="construction",
-        depends=["construction_1", "construction_2", "construction_3"],
-    )
+    @mark.dependency(name="construct_face_from_enum", depends=["construction"])
     @given(face_enums)
     def test_construct_face_from_enum(self, face_enum):
         face = construct_face_from_enum(face_enum)
@@ -60,14 +33,14 @@ class TestFace(PlaneRotatableTests):
         for row in face.stickers:
             assert all(sticker.init_face_enum == face_enum for sticker in row)
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(depends=["construct_face_from_enum"])
     @given(faces)
     @example(construct_face_from_enum(FaceEnum.FRONT, N=3))
     def test_str(self, face):
         gold = f"Face(N={face.N})"
         assert str(face) == gold
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(depends=["construct_face_from_enum"])
     def test_repr(self):
         face = construct_face_from_enum(FaceEnum.FRONT, N=3)
         gold = "\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
@@ -77,7 +50,7 @@ class TestFace(PlaneRotatableTests):
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m"
         assert repr(face) == gold, repr(face)
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(depends=["construct_face_from_enum"])
     def test_get_raw_repr_size(self):
         face = construct_face_from_enum(FaceEnum.FRONT, N=3)
         assert face.get_raw_repr_size() == 9

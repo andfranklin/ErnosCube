@@ -10,6 +10,7 @@ class Face(PlaneRotatable):
     """
 
     def __init__(self, stickers):
+        super().__init__()
         self.N = len(stickers)
         assert self.N > 0
         assert all(len(row) == self.N for row in stickers)

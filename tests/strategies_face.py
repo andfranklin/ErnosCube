@@ -3,20 +3,11 @@ from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
 from ErnosCube.sticker import Sticker
 
-from strategies import stickers
+from strategies import stickers, sticker_matrices
 from hypothesis.strategies import sampled_from, builds, lists, one_of, just
 
 
-def gen_faces_strategy(n):
-    sticker_row = lists(stickers, min_size=n, max_size=n)
-    sticker_mat = lists(sticker_row, min_size=n, max_size=n)
-    return builds(Face, sticker_mat)
-
-
-faces_1 = gen_faces_strategy(1)
-faces_2 = gen_faces_strategy(2)
-faces_3 = gen_faces_strategy(3)
-faces = one_of(faces_1, faces_2, faces_3)
+faces = builds(Face, sticker_matrices)
 
 
 def gen_orthogonal(n, i):
@@ -31,6 +22,8 @@ def gen_orthogonal(n, i):
 def gen_faces_minus_c2(n):
     return one_of(*[gen_orthogonal(n, i) for i in range(1, n)])
 
+
+faces_1 = builds(Face, stickers.flatmap(lambda s: just([[s]])))
 
 # all faces that do not have 180-degree symmetry
 faces_minus_c2 = one_of(faces_1, gen_faces_minus_c2(2), gen_faces_minus_c2(3))
