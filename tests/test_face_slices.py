@@ -2,6 +2,7 @@ from ErnosCube.face_slices import RowFaceSlice, ColFaceSlice
 from ErnosCube.sticker import Sticker
 from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
+from ErnosCube.face import Face
 
 from plane_rotatable_tests import PlaneRotatableTests
 from strategies_face_slice import sticker_lists
@@ -28,6 +29,21 @@ class FaceSlicesTests(PlaneRotatableTests):
         s2 = Sticker(FaceEnum.BACK, OrientEnum.RIGHT)
         s3 = Sticker(FaceEnum.LEFT, OrientEnum.DOWN)
         return [s1, s2, s3]
+
+    @fixture
+    def face(self, stickers):
+        s1, s2, s3 = stickers
+        cs = Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)
+        face_stickers = []
+        face_stickers.append([cs, s1, cs])
+        face_stickers.append([s1, s2, s3])
+        face_stickers.append([cs, s3, cs])
+        return Face(face_stickers)
+
+    @mark.dependency(depends=["construction"])
+    def test_construction_from_face(self, face, stickers):
+        face_slice = self.class_.from_face(face, 1)
+        assert all(a == b for a, b in zip(face_slice.stickers, stickers))
 
 
 class TestRowFaceSlices(FaceSlicesTests):
