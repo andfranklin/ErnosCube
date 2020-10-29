@@ -7,6 +7,7 @@ from hypothesis.strategies import sampled_from, builds, lists, one_of, just
 orient_enums = sampled_from(list(OrientEnum.__members__.values()))
 face_enums = sampled_from(list(FaceEnum.__members__.values()))
 stickers = builds(Sticker, face_enums, orient_enums)
+sticker_lists = lists(stickers, min_size=1, max_size=3)
 
 
 def gen_sticker_matrix(n):

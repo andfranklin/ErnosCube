@@ -21,7 +21,7 @@ class TestFace(PlaneRotatableTests):
 
     @mark.dependency(name="construction")
     @given(sticker_matrices)
-    def test_construction_1(self, sticker_matrix):
+    def test_construction(self, sticker_matrix):
         face = Face(sticker_matrix)
         assert face.N == len(sticker_matrix)
 
@@ -48,7 +48,7 @@ class TestFace(PlaneRotatableTests):
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
         gold += "\x1b[0m\n\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑"
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m"
-        assert repr(face) == gold, repr(face)
+        assert repr(face) == gold, f"{repr(face)}: {repr(repr(face))}"
 
     @mark.dependency(depends=["construct_face_from_enum"])
     def test_get_raw_repr_size(self):
