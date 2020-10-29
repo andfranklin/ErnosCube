@@ -6,6 +6,8 @@ from strategies import orient_enums
 
 class TestOrientEnum(PlaneRotatableTests):
     objs = orient_enums
+    objs_minus_c2 = orient_enums
+    objs_minus_c4 = orient_enums
 
     def test_repr(self):
         assert repr(OrientEnum.UP) == "↑"

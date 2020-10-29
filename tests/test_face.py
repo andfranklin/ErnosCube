@@ -4,15 +4,17 @@ from ErnosCube.face import Face, construct_face_from_enum
 from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given, example
 from hypothesis.strategies import data
-from strategies import stickers, face_enums, faces
+from strategies import stickers, face_enums
+from strategies import faces, faces_minus_c2, faces_minus_c4
 from copy import deepcopy
-import pytest
 
 
 class TestFace(PlaneRotatableTests):
     """Collection of all tests run on instances of the Face Class."""
 
     objs = faces
+    objs_minus_c2 = faces_minus_c2
+    objs_minus_c4 = faces_minus_c4
 
     @given(stickers)
     def test_construction_1(self, sticker):

@@ -45,14 +45,14 @@ class PlaneRotatableTests(ABC):
     definition. The intent of these strategies is to test the properies of the `rotate_*`
     methods. If one uses `rotate_*` in the definition of a strategy it might lead to a
     false sense of assurance in the correctness of each method's implementations. Since
-    `C_4` is a superset of `C_2`, `objs_minus_c4` may be used to generate `objs_minus_c2`
-    using the `one_of` strategy from hypothesis. E.g. create `objs_minus_c4` and
-    `c4_minus_c2`. Then, `objs_minus_c2 = one_of(objs_minus_c4, c4_minus_c2)`.
+    `C_2` is a superset of `C_4`, `objs_minus_c2` may be used to generate `objs_minus_c4`
+    using the `one_of` strategy from hypothesis. E.g. create `objs_minus_c2` and
+    `c2_minus_c4`. Then, `objs_minus_c4 = one_of(objs_minus_c2, c2_minus_c4)`.
 
     It is anticipated that the specification of the `rotatable_objs_minus_*` strategies
     might be tedious without the use of the `rotate_*` functions. So, it is recommended
     that only a few of the many possible rotatable objects are hard coded into the
-    strategies definition.
+    strategy definitions.
     """
 
     objs = None
@@ -75,13 +75,11 @@ class PlaneRotatableTests(ABC):
     def test_objs_def(self):
         assert self.objs is not None
 
-    @mark.xfail(reason="Not implemented yet.")
     @mark.dependency(name="objs_minus_c2")
     def test_objs_minus_c2(self):
         assert self.objs_minus_c2 is not None
 
-    @mark.xfail(reason="Not implemented yet.")
-    @mark.dependency(name="objs_minus_c2")
+    @mark.dependency(name="objs_minus_c4")
     def test_objs_minus_c4(self):
         assert self.objs_minus_c4 is not None
 
@@ -168,21 +166,20 @@ class PlaneRotatableTests(ABC):
     @mark.dependency(depends=["objs_minus_c4", "inequality"])
     @given(data())
     def test_cw_non_idempotence(self, data):
-        obj = data.draw(self.objs)
+        obj = data.draw(self.objs_minus_c4)
         obj_copy = deepcopy(obj).rotate_cw()
         assert obj != obj_copy
 
     @mark.dependency(depends=["objs_minus_c4", "inequality"])
     @given(data())
     def test_ccw_non_idempotence(self, data):
-        obj = data.draw(self.objs)
+        obj = data.draw(self.objs_minus_c4)
         obj_copy = deepcopy(obj).rotate_ccw()
         assert obj != obj_copy
 
-    @reproduce_failure("5.38.1", b"AAEAAQAAAAEAAA==")
     @mark.dependency(depends=["objs_minus_c2", "inequality"])
     @given(data())
     def test_ht_non_idempotence(self, data):
-        obj = data.draw(self.objs)
+        obj = data.draw(self.objs_minus_c2)
         obj_copy = deepcopy(obj).rotate_ht()
         assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"

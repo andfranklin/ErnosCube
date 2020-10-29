@@ -17,6 +17,8 @@ class TestSticker(PlaneRotatableTests):
     """
 
     objs = stickers
+    objs_minus_c2 = stickers
+    objs_minus_c4 = stickers
 
     def test_rotate_cw(self):
         sticker = Sticker(FaceEnum.FRONT, OrientEnum.UP)
