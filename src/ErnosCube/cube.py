@@ -58,3 +58,14 @@ class Cube:
 
     def __repr__(self):
         return "\n".join(self._generate_repr_lines())
+
+    def __eq__(self, other):
+        """Returns true iff the two cubes are strictly equal."""
+        if self.N != other.N:
+            return False
+
+        for face, other_face in zip(self.faces.values(), other.faces.values()):
+            if face != other_face:
+                return False
+
+        return True

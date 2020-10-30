@@ -83,7 +83,7 @@ class TestCube:
             repr(cube_3) == gold
         ), f"{cube_3}:\n{repr(cube_3)}\n\n{repr(repr(cube_3))}"
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(name="deepcopy", depends=["construction"])
     @given(cubes)
     def test_deepcopy(self, cube):
         cube_copy = deepcopy(cube)
@@ -94,3 +94,10 @@ class TestCube:
                 for sticker, sticker_copy in zip(row, row_copy):
                     assert sticker == sticker_copy
                     assert sticker is not sticker_copy
+
+    @mark.dependency(depends=["deepcopy"])
+    @given(cubes)
+    def test_equality(self, cube):
+        assert cube == cube
+        cube_copy = deepcopy(cube)
+        assert cube == cube_copy
