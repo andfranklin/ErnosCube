@@ -4,6 +4,7 @@ from ErnosCube.sticker import Sticker
 from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
 
+from utils import N_and_flatten
 from strategies import cubes
 from hypothesis import given
 from pytest import raises, mark, fixture
@@ -40,7 +41,7 @@ class TestCube:
                 Sticker(FaceEnum.FRONT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.FRONT] = Face(stickers)
+        faces[FaceEnum.FRONT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -52,7 +53,7 @@ class TestCube:
                 Sticker(FaceEnum.BACK, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.BACK] = Face(stickers)
+        faces[FaceEnum.BACK] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -64,7 +65,7 @@ class TestCube:
                 Sticker(FaceEnum.LEFT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.LEFT] = Face(stickers)
+        faces[FaceEnum.LEFT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -76,13 +77,13 @@ class TestCube:
                 Sticker(FaceEnum.RIGHT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.RIGHT] = Face(stickers)
+        faces[FaceEnum.RIGHT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [Sticker(FaceEnum.UP, OrientEnum.UP), Sticker(FaceEnum.UP, OrientEnum.UP)],
             [Sticker(FaceEnum.UP, OrientEnum.UP), Sticker(FaceEnum.UP, OrientEnum.UP)],
         ]
-        faces[FaceEnum.UP] = Face(stickers)
+        faces[FaceEnum.UP] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -94,7 +95,7 @@ class TestCube:
                 Sticker(FaceEnum.DOWN, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.DOWN] = Face(stickers)
+        faces[FaceEnum.DOWN] = Face(*N_and_flatten(stickers))
 
         cube = Cube.from_faces(faces)
         assert cube.N == 2
@@ -105,12 +106,14 @@ class TestCube:
     @given(cubes)
     def test_get_face(self, cube):
         front_face = cube.get_face("front")
-        for row in front_face.stickers:
-            assert all(sticker.init_face_enum == FaceEnum.FRONT for sticker in row)
+        assert all(
+            sticker.init_face_enum == FaceEnum.FRONT for sticker in front_face.stickers
+        )
 
         back_face = cube.get_face(FaceEnum.BACK)
-        for row in back_face.stickers:
-            assert all(sticker.init_face_enum == FaceEnum.BACK for sticker in row)
+        assert all(
+            sticker.init_face_enum == FaceEnum.BACK for sticker in back_face.stickers
+        )
 
     @mark.dependency(depends=["construction"])
     @given(cubes)
@@ -172,10 +175,9 @@ class TestCube:
         for face, face_copy in zip(cube.faces.values(), cube_copy.faces.values()):
             stickers = face.stickers
             stickers_copy = face_copy.stickers
-            for row, row_copy in zip(stickers, stickers_copy):
-                for sticker, sticker_copy in zip(row, row_copy):
-                    assert sticker == sticker_copy
-                    assert sticker is not sticker_copy
+            for sticker, sticker_copy in zip(stickers, stickers_copy):
+                assert sticker == sticker_copy
+                assert sticker is not sticker_copy
 
     @mark.dependency(name="equality", depends=["deepcopy"])
     @given(cubes)
@@ -207,7 +209,7 @@ class TestCube:
                 Sticker(FaceEnum.FRONT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.FRONT] = Face(stickers)
+        faces[FaceEnum.FRONT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -219,7 +221,7 @@ class TestCube:
                 Sticker(FaceEnum.BACK, OrientEnum.RIGHT),
             ],
         ]
-        faces[FaceEnum.BACK] = Face(stickers)
+        faces[FaceEnum.BACK] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -231,7 +233,7 @@ class TestCube:
                 Sticker(FaceEnum.LEFT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.LEFT] = Face(stickers)
+        faces[FaceEnum.LEFT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -243,7 +245,7 @@ class TestCube:
                 Sticker(FaceEnum.DOWN, OrientEnum.LEFT),
             ],
         ]
-        faces[FaceEnum.RIGHT] = Face(stickers)
+        faces[FaceEnum.RIGHT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -252,7 +254,7 @@ class TestCube:
             ],
             [Sticker(FaceEnum.UP, OrientEnum.UP), Sticker(FaceEnum.UP, OrientEnum.UP)],
         ]
-        faces[FaceEnum.UP] = Face(stickers)
+        faces[FaceEnum.UP] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -264,7 +266,7 @@ class TestCube:
                 Sticker(FaceEnum.LEFT, OrientEnum.LEFT),
             ],
         ]
-        faces[FaceEnum.DOWN] = Face(stickers)
+        faces[FaceEnum.DOWN] = Face(*N_and_flatten(stickers))
         gold_cube = Cube.from_faces(faces)
 
         cube_2._cw_rotation_x(0)
@@ -285,7 +287,7 @@ class TestCube:
                 Sticker(FaceEnum.FRONT, OrientEnum.LEFT),
             ],
         ]
-        faces[FaceEnum.FRONT] = Face(stickers)
+        faces[FaceEnum.FRONT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -297,7 +299,7 @@ class TestCube:
                 Sticker(FaceEnum.BACK, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.BACK] = Face(stickers)
+        faces[FaceEnum.BACK] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -309,7 +311,7 @@ class TestCube:
                 Sticker(FaceEnum.UP, OrientEnum.LEFT),
             ],
         ]
-        faces[FaceEnum.LEFT] = Face(stickers)
+        faces[FaceEnum.LEFT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -321,7 +323,7 @@ class TestCube:
                 Sticker(FaceEnum.RIGHT, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.RIGHT] = Face(stickers)
+        faces[FaceEnum.RIGHT] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [Sticker(FaceEnum.UP, OrientEnum.UP), Sticker(FaceEnum.UP, OrientEnum.UP)],
@@ -330,7 +332,7 @@ class TestCube:
                 Sticker(FaceEnum.RIGHT, OrientEnum.LEFT),
             ],
         ]
-        faces[FaceEnum.UP] = Face(stickers)
+        faces[FaceEnum.UP] = Face(*N_and_flatten(stickers))
 
         stickers = [
             [
@@ -342,7 +344,7 @@ class TestCube:
                 Sticker(FaceEnum.DOWN, OrientEnum.UP),
             ],
         ]
-        faces[FaceEnum.DOWN] = Face(stickers)
+        faces[FaceEnum.DOWN] = Face(*N_and_flatten(stickers))
         gold_cube = Cube.from_faces(faces)
 
         cube_2._cw_rotation_x(1)

@@ -46,16 +46,14 @@ class Cube:
     def init(self):
         """Canonical initialization of a N x N x N Cube."""
 
+        N_sqrd = self.N * self.N
         for face_indx, (_, face_enum) in enumerate(FaceEnum.items()):
             face_stickers = []
-            for i in range(self.N):
-                sticker_row = []
-                for j in range(self.N):
-                    sticker = Sticker(face_enum, OrientEnum.UP)
-                    self.stickers.append(sticker)
-                    sticker_row.append(sticker)
-                face_stickers.append(sticker_row)
-            self.faces[face_enum] = Face(face_stickers)
+            for i in range(N_sqrd):
+                sticker = Sticker(face_enum, OrientEnum.UP)
+                self.stickers.append(sticker)
+                face_stickers.append(sticker)
+            self.faces[face_enum] = Face(self.N, face_stickers)
 
         # Eventually, I would like to construct the face. It would have a
         # static array of pointers to stickers. The stickers would be constructed
@@ -93,8 +91,7 @@ class Cube:
         for enum, face in faces.items():
             assert face.N == cube.N
             cube.faces[enum] = face
-            for row in face.stickers:
-                cube.stickers.extend(row)
+            cube.stickers.extend(face.stickers)
 
         # Eventually, I'd like to massage this into something resembling
         # a low-level implementation, like below. This will make

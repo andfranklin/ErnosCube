@@ -9,6 +9,7 @@ from hypothesis import given, example
 from hypothesis.strategies import data
 from strategies import face_enums, stickers, sticker_matrices
 from strategies_face import faces, faces_minus_c2, faces_minus_c4
+from utils import N_and_flatten
 from copy import deepcopy
 from pytest import mark, fixture
 
@@ -22,16 +23,15 @@ class TestFace(PlaneRotatableTests):
 
     @given(sticker_matrices)
     def construction_test(self, sticker_matrix):
-        face = Face(sticker_matrix)
-        assert face.N == len(sticker_matrix)
+        face = Face(*N_and_flatten(sticker_matrix))
 
     @fixture
     def front_face(self):
-        stickers = []
+        sticker_matrix = []
         for i in range(3):
             row = [Sticker(FaceEnum.FRONT, OrientEnum.UP) for _ in range(3)]
-            stickers.append(row)
-        return Face(stickers)
+            sticker_matrix.append(row)
+        return Face(*N_and_flatten(sticker_matrix))
 
     @mark.dependency(depends=["construction"])
     @given(faces)
@@ -53,111 +53,111 @@ class TestFace(PlaneRotatableTests):
         assert front_face.get_raw_repr_size() == 9
 
     def rotate_cw_test(self):
-        stickers = []
+        sticker_mat = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         s01 = Sticker(FaceEnum.RIGHT, OrientEnum.RIGHT)
         s02 = Sticker(FaceEnum.BACK, OrientEnum.DOWN)
-        stickers.append([s00, s01, s02])
+        sticker_mat.append([s00, s01, s02])
 
         s10 = Sticker(FaceEnum.LEFT, OrientEnum.LEFT)
         s11 = Sticker(FaceEnum.UP, OrientEnum.UP)
         s12 = Sticker(FaceEnum.DOWN, OrientEnum.RIGHT)
-        stickers.append([s10, s11, s12])
+        sticker_mat.append([s10, s11, s12])
 
         s20 = Sticker(FaceEnum.FRONT, OrientEnum.DOWN)
         s21 = Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)
         s22 = Sticker(FaceEnum.BACK, OrientEnum.UP)
-        stickers.append([s20, s21, s22])
+        sticker_mat.append([s20, s21, s22])
 
-        comp_face = Face(stickers)
+        comp_face = Face(*N_and_flatten(sticker_mat))
 
-        cw_stickers = []
+        cw_sticker_mat = []
 
         sticker_row = [s20, s10, s00]
-        cw_stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        cw_sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
         sticker_row = [s21, s11, s01]
-        cw_stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        cw_sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
         sticker_row = [s22, s12, s02]
-        cw_stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        cw_sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
-        cw_comp_face = Face(cw_stickers)
+        cw_comp_face = Face(*N_and_flatten(cw_sticker_mat))
 
         assert (
             comp_face.rotate_cw() == cw_comp_face
         ), f"failed for {str(comp_face)}\n{repr(comp_face)}"
 
     def rotate_ccw_test(self):
-        ccw_stickers = []
+        ccw_sticker_mat = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         s01 = Sticker(FaceEnum.RIGHT, OrientEnum.RIGHT)
         s02 = Sticker(FaceEnum.BACK, OrientEnum.DOWN)
-        ccw_stickers.append([s00, s01, s02])
+        ccw_sticker_mat.append([s00, s01, s02])
 
         s10 = Sticker(FaceEnum.LEFT, OrientEnum.LEFT)
         s11 = Sticker(FaceEnum.UP, OrientEnum.UP)
         s12 = Sticker(FaceEnum.DOWN, OrientEnum.RIGHT)
-        ccw_stickers.append([s10, s11, s12])
+        ccw_sticker_mat.append([s10, s11, s12])
 
         s20 = Sticker(FaceEnum.FRONT, OrientEnum.DOWN)
         s21 = Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)
         s22 = Sticker(FaceEnum.BACK, OrientEnum.UP)
-        ccw_stickers.append([s20, s21, s22])
+        ccw_sticker_mat.append([s20, s21, s22])
 
-        ccw_comp_face = Face(ccw_stickers)
+        ccw_comp_face = Face(*N_and_flatten(ccw_sticker_mat))
 
-        stickers = []
+        sticker_mat = []
 
         sticker_row = [s20, s10, s00]
-        stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
         sticker_row = [s21, s11, s01]
-        stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
         sticker_row = [s22, s12, s02]
-        stickers.append([deepcopy(s).rotate_cw() for s in sticker_row])
+        sticker_mat.append([deepcopy(s).rotate_cw() for s in sticker_row])
 
-        comp_face = Face(stickers)
+        comp_face = Face(*N_and_flatten(sticker_mat))
 
         assert (
             comp_face.rotate_ccw() == ccw_comp_face
         ), f"failed for {str(comp_face)}\n{repr(comp_face)}"
 
     def rotate_ht_test(self):
-        stickers = []
+        sticker_mat = []
 
         s00 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
         s01 = Sticker(FaceEnum.RIGHT, OrientEnum.RIGHT)
         s02 = Sticker(FaceEnum.BACK, OrientEnum.DOWN)
-        stickers.append([s00, s01, s02])
+        sticker_mat.append([s00, s01, s02])
 
         s10 = Sticker(FaceEnum.LEFT, OrientEnum.LEFT)
         s11 = Sticker(FaceEnum.UP, OrientEnum.UP)
         s12 = Sticker(FaceEnum.DOWN, OrientEnum.RIGHT)
-        stickers.append([s10, s11, s12])
+        sticker_mat.append([s10, s11, s12])
 
         s20 = Sticker(FaceEnum.FRONT, OrientEnum.DOWN)
         s21 = Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)
         s22 = Sticker(FaceEnum.BACK, OrientEnum.UP)
-        stickers.append([s20, s21, s22])
+        sticker_mat.append([s20, s21, s22])
 
-        comp_face = Face(stickers)
+        comp_face = Face(*N_and_flatten(sticker_mat))
 
-        ht_stickers = []
+        ht_sticker_mat = []
 
         sticker_row = [s22, s21, s20]
-        ht_stickers.append([deepcopy(s).rotate_ht() for s in sticker_row])
+        ht_sticker_mat.append([deepcopy(s).rotate_ht() for s in sticker_row])
 
         sticker_row = [s12, s11, s10]
-        ht_stickers.append([deepcopy(s).rotate_ht() for s in sticker_row])
+        ht_sticker_mat.append([deepcopy(s).rotate_ht() for s in sticker_row])
 
         sticker_row = [s02, s01, s00]
-        ht_stickers.append([deepcopy(s).rotate_ht() for s in sticker_row])
+        ht_sticker_mat.append([deepcopy(s).rotate_ht() for s in sticker_row])
 
-        ht_comp_face = Face(ht_stickers)
+        ht_comp_face = Face(*N_and_flatten(ht_sticker_mat))
 
         assert (
             comp_face.rotate_ht() == ht_comp_face
@@ -174,7 +174,7 @@ class TestFace(PlaneRotatableTests):
         face_stickers.append([cs, s1, cs])
         face_stickers.append([s1, s2, s3])
         face_stickers.append([cs, s3, cs])
-        return stickers, Face(face_stickers)
+        return stickers, Face(*N_and_flatten(face_stickers))
 
     @mark.dependency(name="get_row_slice", depends=["construction"])
     def test_get_row_slice(self):
@@ -195,14 +195,13 @@ class TestFace(PlaneRotatableTests):
         stickers, face = self.stickers_and_face()
         face_slice = face.get_row_slice(1)
         face.apply_slice(face_slice, 0)
-        assert all(
-            a == b for a, b in zip(face.stickers[0], stickers)
-        ), f"\n{repr(face)}"
+        for col_indx in range(face.N):
+            assert face[0, col_indx] == stickers[col_indx], f"\n{repr(face)}"
 
     @mark.dependency(depends=["get_col_slice"])
     def test_apply_col_slice(self):
         stickers, face = self.stickers_and_face()
         face_slice = face.get_col_slice(1)
         face.apply_slice(face_slice, 0)
-        for i, row in enumerate(face.stickers):
-            assert row[0] == stickers[i], f"\n{repr(face)}"
+        for row_indx in range(face.N):
+            assert face[row_indx, 0] == stickers[row_indx], f"\n{repr(face)}"
