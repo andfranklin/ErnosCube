@@ -3,7 +3,7 @@ from ErnosCube.face_enum import FaceEnum
 
 from strategies import cubes
 from hypothesis import given
-from pytest import raises, mark
+from pytest import raises, mark, fixture
 
 
 class TestCube:
@@ -32,3 +32,52 @@ class TestCube:
         back_face = cube.get_face(FaceEnum.BACK)
         for row in back_face.stickers:
             assert all(sticker.init_face_enum == FaceEnum.BACK for sticker in row)
+
+    @mark.dependency(depends=["construction"])
+    @given(cubes)
+    def test_str(self, cube):
+        assert str(cube) == f"Cube(N={cube.N})"
+
+    @fixture
+    def cube_3(self):
+        return Cube(N=3)
+
+    @mark.dependency(depends=["construction"])
+    def test_repr(self, cube_3):
+        gold = "         \x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ "
+        gold += (
+            "\x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\n         \x1b[7m\x1b[1m\x1b[37m"
+        )
+        gold += " ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\n"
+        gold += "         \x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[37m ↑ \x1b[0m\n\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\n\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\n\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[35m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[31m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ "
+        gold += (
+            "\x1b[0m\x1b[7m\x1b[1m\x1b[33m ↑ \x1b[0m\n         \x1b[7m\x1b[1m\x1b[34m"
+        )
+        gold += " ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[34m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[34m ↑ "
+        gold += (
+            "\x1b[0m\n         \x1b[7m\x1b[1m\x1b[34m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[34m"
+        )
+        gold += " ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[34m ↑ \x1b[0m\n         "
+        gold += "\x1b[7m\x1b[1m\x1b[34m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[34m ↑ "
+        gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[34m ↑ \x1b[0m"
+        assert (
+            repr(cube_3) == gold
+        ), f"{cube_3}:\n{repr(cube_3)}\n\n{repr(repr(cube_3))}"
