@@ -22,7 +22,9 @@ class Face(PlaneRotatable):
 
     def _generate_repr_lines(self):
         for i in range(self.N):
-            row = self.stickers[i : i + self.N]
+            start_indx = self._get_sticker_indx(i, 0)
+            end_indx = start_indx + self.N
+            row = self.stickers[start_indx:end_indx]
             yield "".join(repr(sticker) for sticker in row)
 
     def __repr__(self):
