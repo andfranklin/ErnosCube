@@ -90,3 +90,15 @@ class Face(PlaneRotatable):
         for row in self.stickers:
             stickers.append(row[indx])
         return ColFaceSlice(stickers)
+
+    def apply_slice(self, slice, indx):
+        stickers = self.stickers
+
+        if isinstance(slice, RowFaceSlice):
+            row = stickers[indx]
+            for j, sticker in enumerate(slice.stickers):
+                row[j] = sticker
+
+        else:
+            for i, sticker in enumerate(slice.stickers):
+                stickers[i][indx] = sticker

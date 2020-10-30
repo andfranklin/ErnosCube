@@ -179,16 +179,33 @@ class TestFace(PlaneRotatableTests):
         face_stickers.append([cs, s3, cs])
         return stickers, Face(face_stickers)
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(name="get_row_slice", depends=["construction"])
     def test_get_row_slice(self):
         stickers, face = self.stickers_and_face()
         face_slice = face.get_row_slice(1)
         assert isinstance(face_slice, RowFaceSlice)
         assert all(a == b for a, b in zip(face_slice.stickers, stickers))
 
-    @mark.dependency(depends=["construction"])
+    @mark.dependency(name="get_col_slice", depends=["construction"])
     def test_get_col_slice(self):
         stickers, face = self.stickers_and_face()
         face_slice = face.get_col_slice(1)
         assert isinstance(face_slice, ColFaceSlice)
         assert all(a == b for a, b in zip(face_slice.stickers, stickers))
+
+    @mark.dependency(depends=["get_row_slice"])
+    def test_apply_row_slice(self):
+        stickers, face = self.stickers_and_face()
+        face_slice = face.get_row_slice(1)
+        face.apply_slice(face_slice, 0)
+        assert all(
+            a == b for a, b in zip(face.stickers[0], stickers)
+        ), f"\n{repr(face)}"
+
+    @mark.dependency(depends=["get_col_slice"])
+    def test_apply_col_slice(self):
+        stickers, face = self.stickers_and_face()
+        face_slice = face.get_col_slice(1)
+        face.apply_slice(face_slice, 0)
+        for i, row in enumerate(face.stickers):
+            assert row[0] == stickers[i], f"\n{repr(face)}"
