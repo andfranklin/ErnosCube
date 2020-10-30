@@ -10,7 +10,7 @@ from hypothesis.strategies import data
 from strategies import face_enums, stickers, sticker_matrices
 from strategies_face import faces, faces_minus_c2, faces_minus_c4
 from copy import deepcopy
-from pytest import mark
+from pytest import mark, fixture
 
 
 class TestFace(PlaneRotatableTests):
@@ -25,35 +25,32 @@ class TestFace(PlaneRotatableTests):
         face = Face(sticker_matrix)
         assert face.N == len(sticker_matrix)
 
-    @mark.dependency(name="construction_from_face_enum", depends=["construction"])
-    @given(face_enums)
-    def test_construction_from_face_enum(self, face_enum):
-        face = Face.from_face_enum(face_enum)
-        assert face.N == 3
-        for row in face.stickers:
-            assert all(sticker.init_face_enum == face_enum for sticker in row)
+    @fixture
+    def front_face(self):
+        stickers = []
+        for i in range(3):
+            row = [Sticker(FaceEnum.FRONT, OrientEnum.UP) for _ in range(3)]
+            stickers.append(row)
+        return Face(stickers)
 
-    @mark.dependency(depends=["construction_from_face_enum"])
+    @mark.dependency(depends=["construction"])
     @given(faces)
-    @example(Face.from_face_enum(FaceEnum.FRONT, N=3))
     def test_str(self, face):
         gold = f"Face(N={face.N})"
         assert str(face) == gold
 
-    @mark.dependency(depends=["construction_from_face_enum"])
-    def test_repr(self):
-        face = Face.from_face_enum(FaceEnum.FRONT, N=3)
+    @mark.dependency(depends=["construction"])
+    def test_repr(self, front_face):
         gold = "\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
         gold += "\x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\n\x1b[7m\x1b[1m\x1b[32m ↑"
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ "
         gold += "\x1b[0m\n\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑"
         gold += " \x1b[0m\x1b[7m\x1b[1m\x1b[32m ↑ \x1b[0m"
-        assert repr(face) == gold, f"{repr(face)}: {repr(repr(face))}"
+        assert repr(front_face) == gold, f"{repr(front_face)}: {repr(repr(front_face))}"
 
-    @mark.dependency(depends=["construction_from_face_enum"])
-    def test_get_raw_repr_size(self):
-        face = Face.from_face_enum(FaceEnum.FRONT, N=3)
-        assert face.get_raw_repr_size() == 9
+    @mark.dependency(depends=["construction"])
+    def test_get_raw_repr_size(self, front_face):
+        assert front_face.get_raw_repr_size() == 9
 
     def rotate_cw_test(self):
         stickers = []

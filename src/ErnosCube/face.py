@@ -1,4 +1,3 @@
-from .sticker import Sticker
 from .orient_enum import OrientEnum
 from .plane_rotatable import PlaneRotatable
 from .face_slices import RowFaceSlice, ColFaceSlice
@@ -16,14 +15,6 @@ class Face(PlaneRotatable):
         assert self.N > 0
         assert all(len(row) == self.N for row in stickers)
         self.stickers = stickers
-
-    @classmethod
-    def from_face_enum(cls, face_enum, N=3):
-        assert N > 0
-        stickers = []
-        for _ in range(N):
-            stickers.append([Sticker(face_enum, OrientEnum.UP) for _ in range(N)])
-        return cls(stickers)
 
     def __str__(self):
         return f"Face(N={self.N})"
