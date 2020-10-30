@@ -108,6 +108,7 @@ class PlaneRotatableTests:
     @given(data())
     def test_equality(self, data):
         obj = data.draw(self.objs)
+        assert obj == obj, f"failed for {str(obj)}\n{repr(obj)}"
         obj_copy = deepcopy(obj)
         assert obj == obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
 
