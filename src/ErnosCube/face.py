@@ -15,16 +15,7 @@ class Face(PlaneRotatable):
         N_sqrd = N * N
         assert len(stickers) == N_sqrd
         self.N = N
-
-        # "pointer" to array of "pointers" to stickers.
-        # These are owned by this Face.
         self.stickers = stickers
-
-        # Cache of sticker "pointers" not owned by this Face.
-        # Used in rotations. Avoids cache thrashing caused by
-        # repeatedly allocating and deallocating arrays of
-        # sticker pointers. Subject to redesign.
-        self._sticker_cache = [None for _ in range(N_sqrd)]
 
     def __str__(self):
         return f"Face(N={self.N})"
@@ -62,7 +53,7 @@ class Face(PlaneRotatable):
 
     def rotate_cw(self):
         old_stickers = self.stickers
-        new_stickers = self._sticker_cache
+        new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
             new_col = (self.N - 1) - old_row
             for old_col in range(self.N):
@@ -72,12 +63,11 @@ class Face(PlaneRotatable):
                 sticker = old_stickers[old_indx].rotate_cw()
                 new_stickers[new_indx] = sticker
         self.stickers = new_stickers
-        self._sticker_cache = old_stickers
         return self
 
     def rotate_ccw(self):
         old_stickers = self.stickers
-        new_stickers = self._sticker_cache
+        new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
             new_col = old_row
             for old_col in range(self.N):
@@ -87,12 +77,11 @@ class Face(PlaneRotatable):
                 sticker = old_stickers[old_indx].rotate_ccw()
                 new_stickers[new_indx] = sticker
         self.stickers = new_stickers
-        self._sticker_cache = old_stickers
         return self
 
     def rotate_ht(self):
         old_stickers = self.stickers
-        new_stickers = self._sticker_cache
+        new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
             new_row = (self.N - 1) - old_row
             for old_col in range(self.N):
@@ -102,7 +91,6 @@ class Face(PlaneRotatable):
                 sticker = old_stickers[old_indx].rotate_ht()
                 new_stickers[new_indx] = sticker
         self.stickers = new_stickers
-        self._sticker_cache = old_stickers
         return self
 
     def get_row_slice(self, row_indx):
