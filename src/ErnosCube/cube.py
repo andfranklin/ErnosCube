@@ -24,22 +24,58 @@ class Cube:
         assert N > 0
         self.N = N
         self.last_layer = N - 1
+
+        # Slow and dynamic implementation for now.
         self.stickers = []
         self.faces = {}
 
-        # Dirty hack to implement the default initialization of a cube.
-        # Would probably handle this differently in C++ or Rust.
+        # Eventually, I'd like to massage this into something resembaling
+        # a C/C++ or Rust implementation, like below.
+
+        # self.faces = {enum: None for _, enum in FaceEnum.items()}
+        # self.n_faces = len(self.faces)
+
+        # self.n_stickers = self.n_faces * self.N * self.N
+        # self.stickers = [None for _ in range(self.n_stickers)]
+
+        # Dirty, but convenient in python.
+        # I need to eventually change this.
         if init:
-            for face_indx, (_, face_enum) in enumerate(FaceEnum.items()):
-                face_stickers = []
-                for i in range(self.N):
-                    sticker_row = []
-                    for j in range(self.N):
-                        sticker = Sticker(face_enum, OrientEnum.UP)
-                        self.stickers.append(sticker)
-                        sticker_row.append(sticker)  # this would be a pointer in C.
-                    face_stickers.append(sticker_row)
-                self.faces[face_enum] = Face(face_stickers)
+            self.init()
+
+    def init(self):
+        """Canonical initialization of a N x N x N Cube."""
+
+        for face_indx, (_, face_enum) in enumerate(FaceEnum.items()):
+            face_stickers = []
+            for i in range(self.N):
+                sticker_row = []
+                for j in range(self.N):
+                    sticker = Sticker(face_enum, OrientEnum.UP)
+                    self.stickers.append(sticker)
+                    sticker_row.append(sticker)
+                face_stickers.append(sticker_row)
+            self.faces[face_enum] = Face(face_stickers)
+
+        # Eventually, I would like to construct the face. It would have a
+        # static array of pointers to stickers. The stickers would be constructed
+        # here, in Cube. Then the pointers in each face would point to these
+        # stickers.
+
+        # N_squared = self.N * self.N
+        # for face_indx in range(self.n_faces):
+        #     face_enum = FaceEnum.get_enum(face_indx)
+        #     face_start = N_squared * face_indx
+        #     face_stickers = [None for _ in range(self.N)]
+        #     for i in range(self.N):
+        #         row_start = self.N * i
+        #         sticker_row = [None for _ in range(self.N)] # this would be a row of pointers in C.
+        #         for j in range(self.N):
+        #             stickers_indx = face_start + row_start + j
+        #             self.stickers[stickers_indx] = Sticker(face_enum, OrientEnum.UP)
+        #             sticker_row[j] = self.stickers[stickers_indx]
+        #         face_stickers[i] = sticker_row
+        #     self.faces[face_enum] = Face(face_stickers)
 
     @classmethod
     def from_faces(cls, faces):
@@ -59,6 +95,23 @@ class Cube:
             cube.faces[enum] = face
             for row in face.stickers:
                 cube.stickers.extend(row)
+
+        # Eventually, I'd like to massage this into something resembling
+        # a low-level implementation, like below. This will make
+        # porting the code easier, and hopefully I'll have a good test
+        # harness to ensure correctness.
+
+        # N_squared = cube.N * cube.N
+        # for face_indx, (face_enum, face) in enumerate(faces.items()):
+        #     assert face.N == cube.N
+        #     face_start = N_squared * face_indx
+        #     cube.faces[face_enum] = face
+        #     for row_indx, row in enumerate(face.stickers):
+        #         row_start = cube.N * row_indx
+        #         for col_indx, sticker in enumerate(row):
+        #             stickers_indx = face_start + row_start + col_indx
+        #             cube.stickers[stickers_indx] = sticker
+
         return cube
 
     def get_face(self, thing):
