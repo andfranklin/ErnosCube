@@ -4,6 +4,7 @@ from ErnosCube.face_enum import FaceEnum
 from strategies import cubes
 from hypothesis import given
 from pytest import raises, mark, fixture
+from copy import deepcopy
 
 
 class TestCube:
@@ -81,3 +82,15 @@ class TestCube:
         assert (
             repr(cube_3) == gold
         ), f"{cube_3}:\n{repr(cube_3)}\n\n{repr(repr(cube_3))}"
+
+    @mark.dependency(depends=["construction"])
+    @given(cubes)
+    def test_deepcopy(self, cube):
+        cube_copy = deepcopy(cube)
+        for face, face_copy in zip(cube.faces.values(), cube_copy.faces.values()):
+            stickers = face.stickers
+            stickers_copy = face_copy.stickers
+            for row, row_copy in zip(stickers, stickers_copy):
+                for sticker, sticker_copy in zip(row, row_copy):
+                    assert sticker == sticker_copy
+                    assert sticker is not sticker_copy
