@@ -30,6 +30,9 @@ class Face(PlaneRotatable):
         return self.N * self.stickers[0][0].get_raw_repr_size()
 
     def __eq__(self, other):
+        if self is other:
+            return True
+
         if self.N != other.N:
             return False
 
