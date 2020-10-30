@@ -43,13 +43,6 @@ class FaceSlicesTests(PlaneRotatableTests):
         face_stickers.append([cs, s3, cs])
         return Face(face_stickers)
 
-    @mark.dependency(depends=["construction", "class"])
-    def test_construction_from_face(self):
-        stickers = self.stickers()
-        face = self.face(stickers)
-        face_slice = self.class_.from_face(face, 1)
-        assert all(a == b for a, b in zip(face_slice.stickers, stickers))
-
 
 class TestRowFaceSlices(FaceSlicesTests):
     """Collection of all tests run on instances of the RowFaceSlices Class."""

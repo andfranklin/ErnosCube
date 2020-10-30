@@ -16,11 +16,6 @@ class FaceSlice(PlaneRotatable):
         els_eq = all(s1 == s2 for s1, s2 in zip(self.stickers, other.stickers))
         return same_type and els_eq
 
-    @classmethod
-    @abstractmethod
-    def from_face(cls, face, indx):
-        pass
-
     @abstractmethod
     def __str__(self):
         pass
@@ -31,11 +26,6 @@ class FaceSlice(PlaneRotatable):
 
 
 class RowFaceSlice(FaceSlice):
-    @classmethod
-    def from_face(cls, face, row_indx):
-        assert row_indx >= 0 and row_indx < face.N
-        return cls([sticker for sticker in face.stickers[row_indx]])
-
     def rotate_cw(self):
         new_s = [sticker.rotate_cw() for sticker in self.stickers]
         return ColFaceSlice(new_s)
@@ -56,14 +46,6 @@ class RowFaceSlice(FaceSlice):
 
 
 class ColFaceSlice(FaceSlice):
-    @classmethod
-    def from_face(cls, face, col_indx):
-        assert col_indx >= 0 and col_indx < face.N
-        stickers = []
-        for row in face.stickers:
-            stickers.append(row[col_indx])
-        return cls(stickers)
-
     def rotate_cw(self):
         new_s = [sticker.rotate_cw() for sticker in reversed(self.stickers)]
         return RowFaceSlice(new_s)

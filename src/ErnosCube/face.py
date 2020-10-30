@@ -1,6 +1,7 @@
 from .sticker import Sticker
 from .orient_enum import OrientEnum
 from .plane_rotatable import PlaneRotatable
+from .face_slices import RowFaceSlice, ColFaceSlice
 
 
 class Face(PlaneRotatable):
@@ -78,3 +79,14 @@ class Face(PlaneRotatable):
                 new_stickers[new_row][new_col] = sticker
         self.stickers = new_stickers
         return self
+
+    def get_row_slice(self, indx):
+        assert indx >= 0 and indx < self.N
+        return RowFaceSlice([sticker for sticker in self.stickers[indx]])
+
+    def get_col_slice(self, indx):
+        assert indx >= 0 and indx < self.N
+        stickers = []
+        for row in self.stickers:
+            stickers.append(row[indx])
+        return ColFaceSlice(stickers)

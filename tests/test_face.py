@@ -2,6 +2,7 @@ from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
 from ErnosCube.sticker import Sticker
 from ErnosCube.face import Face
+from ErnosCube.face import RowFaceSlice, ColFaceSlice
 
 from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given, example
@@ -164,3 +165,30 @@ class TestFace(PlaneRotatableTests):
         assert (
             comp_face.rotate_ht() == ht_comp_face
         ), f"failed for {str(comp_face)}\n{repr(comp_face)}"
+
+    def stickers_and_face(self):
+        s1 = Sticker(FaceEnum.FRONT, OrientEnum.UP)
+        s2 = Sticker(FaceEnum.BACK, OrientEnum.RIGHT)
+        s3 = Sticker(FaceEnum.LEFT, OrientEnum.DOWN)
+        stickers = [s1, s2, s3]
+
+        cs = Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)
+        face_stickers = []
+        face_stickers.append([cs, s1, cs])
+        face_stickers.append([s1, s2, s3])
+        face_stickers.append([cs, s3, cs])
+        return stickers, Face(face_stickers)
+
+    @mark.dependency(depends=["construction"])
+    def test_get_row_slice(self):
+        stickers, face = self.stickers_and_face()
+        face_slice = face.get_row_slice(1)
+        assert isinstance(face_slice, RowFaceSlice)
+        assert all(a == b for a, b in zip(face_slice.stickers, stickers))
+
+    @mark.dependency(depends=["construction"])
+    def test_get_col_slice(self):
+        stickers, face = self.stickers_and_face()
+        face_slice = face.get_col_slice(1)
+        assert isinstance(face_slice, ColFaceSlice)
+        assert all(a == b for a, b in zip(face_slice.stickers, stickers))
