@@ -32,3 +32,7 @@ class Cube:
                     sticker_row.append(sticker)  # this would be a pointer in C.
                 face_stickers.append(sticker_row)
             self.faces[face_enum] = Face(face_stickers)
+
+    def get_face(self, thing):
+        enum = FaceEnum.get_enum(thing)
+        return self.faces[enum]
