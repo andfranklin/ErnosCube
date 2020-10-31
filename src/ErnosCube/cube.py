@@ -490,3 +490,42 @@ class Cube:
         back_face.apply_slice(left_slice, back_index)
         left_face.apply_slice(front_slice, left_index)
         front_face.apply_slice(right_slice, front_index)
+
+    def _ht_rotation_z(self, layer):
+        """Does a half-turn rotation of a given layer in the z-axis.
+
+        The z-axis is orthogonal to the up and down faces. The positive
+        direction of the z-axis is incident on the down face and exits the
+        up face. The direction of rotation is defined with respect to
+        the positive z-axis.
+        """
+        assert layer >= 0 and layer < self.N
+
+        if layer == 0:
+            down_face = self.faces[FaceEnum.DOWN]
+            down_face.rotate_ht()
+
+        if layer == self.last_layer:
+            up_face = self.faces[FaceEnum.UP]
+            up_face.rotate_ht()
+
+        right_face = self.faces[FaceEnum.RIGHT]
+        right_index = self.last_layer - layer
+        right_slice = right_face.get_row_slice(right_index)
+
+        back_face = self.faces[FaceEnum.BACK]
+        back_index = self.last_layer - layer
+        back_slice = back_face.get_row_slice(back_index)
+
+        left_face = self.faces[FaceEnum.LEFT]
+        left_index = self.last_layer - layer
+        left_slice = left_face.get_row_slice(left_index)
+
+        front_face = self.faces[FaceEnum.FRONT]
+        front_index = self.last_layer - layer
+        front_slice = front_face.get_row_slice(front_index)
+
+        right_face.apply_slice(left_slice, right_index)
+        back_face.apply_slice(front_slice, back_index)
+        left_face.apply_slice(right_slice, left_index)
+        front_face.apply_slice(back_slice, front_index)
