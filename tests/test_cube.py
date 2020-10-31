@@ -710,6 +710,179 @@ class TestCube:
 
             rotated_cubes.append(cube_copy)
 
+    @mark.dependency(name="ccw_rotation_y_0", depends=["equality", "from_faces"])
+    def test_ccw_rotation_y_0(self, cube_2):
+        faces = {}
+
+        stickers = [
+            [
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.FRONT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.BACK, OrientEnum.UP),
+                Sticker(FaceEnum.DOWN, OrientEnum.DOWN),
+            ],
+            [
+                Sticker(FaceEnum.BACK, OrientEnum.UP),
+                Sticker(FaceEnum.DOWN, OrientEnum.DOWN),
+            ],
+        ]
+        faces[FaceEnum.BACK] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.LEFT, OrientEnum.RIGHT),
+                Sticker(FaceEnum.LEFT, OrientEnum.RIGHT),
+            ],
+            [
+                Sticker(FaceEnum.LEFT, OrientEnum.RIGHT),
+                Sticker(FaceEnum.LEFT, OrientEnum.RIGHT),
+            ],
+        ]
+        faces[FaceEnum.LEFT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.RIGHT, OrientEnum.UP),
+                Sticker(FaceEnum.RIGHT, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.RIGHT, OrientEnum.UP),
+                Sticker(FaceEnum.RIGHT, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.RIGHT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.BACK, OrientEnum.DOWN),
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.BACK, OrientEnum.DOWN),
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.UP] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+                Sticker(FaceEnum.DOWN, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+                Sticker(FaceEnum.DOWN, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.DOWN] = Face(*N_and_flatten(stickers))
+        cube = Cube.from_faces(faces)
+        cube._ccw_rotation_y(0)
+        assert cube_2 == cube, f"{cube}\n{repr(cube)}"
+
+    @mark.dependency(name="ccw_rotation_y_1", depends=["equality", "from_faces"])
+    def test_ccw_rotation_y_1(self, cube_2):
+        faces = {}
+
+        stickers = [
+            [
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.FRONT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.DOWN, OrientEnum.DOWN),
+                Sticker(FaceEnum.BACK, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.DOWN, OrientEnum.DOWN),
+                Sticker(FaceEnum.BACK, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.BACK] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.LEFT, OrientEnum.UP),
+                Sticker(FaceEnum.LEFT, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.LEFT, OrientEnum.UP),
+                Sticker(FaceEnum.LEFT, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.LEFT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.RIGHT, OrientEnum.LEFT),
+                Sticker(FaceEnum.RIGHT, OrientEnum.LEFT),
+            ],
+            [
+                Sticker(FaceEnum.RIGHT, OrientEnum.LEFT),
+                Sticker(FaceEnum.RIGHT, OrientEnum.LEFT),
+            ],
+        ]
+        faces[FaceEnum.RIGHT] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+                Sticker(FaceEnum.BACK, OrientEnum.DOWN),
+            ],
+            [
+                Sticker(FaceEnum.UP, OrientEnum.UP),
+                Sticker(FaceEnum.BACK, OrientEnum.DOWN),
+            ],
+        ]
+        faces[FaceEnum.UP] = Face(*N_and_flatten(stickers))
+
+        stickers = [
+            [
+                Sticker(FaceEnum.DOWN, OrientEnum.UP),
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+            ],
+            [
+                Sticker(FaceEnum.DOWN, OrientEnum.UP),
+                Sticker(FaceEnum.FRONT, OrientEnum.UP),
+            ],
+        ]
+        faces[FaceEnum.DOWN] = Face(*N_and_flatten(stickers))
+        cube = Cube.from_faces(faces)
+        cube._ccw_rotation_y(1)
+        assert cube_2 == cube, f"{cube}\n{repr(cube)}"
+
+    @mark.dependency(depends=["inequality", "ccw_rotation_y_0", "ccw_rotation_y_1"])
+    @given(cubes)
+    def test_ccw_rotation_y_arbitrary(self, cube):
+        rotated_cubes = []
+        for i in range(cube.N):
+            cube_copy = deepcopy(cube)
+            cube_copy._ccw_rotation_y(i)
+
+            err_str = f"{cube}._ccw_rotation_y({i}):\n{repr(cube)}\n\n{repr(cube_copy)}"
+            assert cube != cube_copy, err_str
+            for rotated_cube in rotated_cubes:
+                assert cube_copy != rotated_cube, err_str
+
+            rotated_cubes.append(cube_copy)
+
     @mark.dependency(name="cw_rotation_z_0", depends=["equality", "from_faces"])
     def test_cw_rotation_z_0(self, cube_2):
         faces = {}
