@@ -121,6 +121,10 @@ class TestCube:
         assert str(cube) == f"Cube(N={cube.N})"
 
     @fixture
+    def cube_1(self):
+        return Cube(N=1)
+
+    @fixture
     def cube_2(self):
         return Cube(N=2)
 
@@ -347,7 +351,10 @@ class TestCube:
         cube_2._cw_rotation_x(1)
         assert cube_2 == gold_cube, f"{cube_2}\n{repr(cube_2)}"
 
-    @mark.dependency(depends=["inequality", "cw_rotation_x_0", "cw_rotation_x_1"])
+    @mark.dependency(
+        name="cw_rotation_x_arbitrary",
+        depends=["inequality", "cw_rotation_x_0", "cw_rotation_x_1"],
+    )
     @given(cubes)
     def test_cw_rotation_x_arbitrary(self, cube):
         rotated_cubes = []
@@ -514,7 +521,10 @@ class TestCube:
         cube._ccw_rotation_x(1)
         assert cube_2 == cube, f"{cube}\n{repr(cube)}"
 
-    @mark.dependency(depends=["inequality", "ccw_rotation_x_0", "ccw_rotation_x_1"])
+    @mark.dependency(
+        name="ccw_rotation_x_arbitrary",
+        depends=["inequality", "ccw_rotation_x_0", "ccw_rotation_x_1"],
+    )
     @given(cubes)
     def test_ccw_rotation_x_arbitrary(self, cube):
         rotated_cubes = []
@@ -681,7 +691,10 @@ class TestCube:
         cube_2._ht_rotation_x(1)
         assert cube_2 == gold_cube, f"{cube_2}\n{repr(cube_2)}"
 
-    @mark.dependency(depends=["inequality", "ht_rotation_x_0", "ht_rotation_x_1"])
+    @mark.dependency(
+        name="ht_rotation_x_arbitrary",
+        depends=["inequality", "ht_rotation_x_0", "ht_rotation_x_1"],
+    )
     @given(cubes)
     def test_ht_rotation_x_arbitrary(self, cube):
         rotated_cubes = []
@@ -854,7 +867,10 @@ class TestCube:
         cube_2._cw_rotation_y(1)
         assert cube_2 == gold_cube, f"{cube_2}\n{repr(cube_2)}"
 
-    @mark.dependency(depends=["inequality", "cw_rotation_y_0", "cw_rotation_y_1"])
+    @mark.dependency(
+        name="cw_rotation_y_arbitrary",
+        depends=["inequality", "cw_rotation_y_0", "cw_rotation_y_1"],
+    )
     @given(cubes)
     def test_cw_rotation_y_arbitrary(self, cube):
         rotated_cubes = []
@@ -1027,7 +1043,10 @@ class TestCube:
         cube._ccw_rotation_y(1)
         assert cube_2 == cube, f"{cube}\n{repr(cube)}"
 
-    @mark.dependency(depends=["inequality", "ccw_rotation_y_0", "ccw_rotation_y_1"])
+    @mark.dependency(
+        name="ccw_rotation_y_arbitrary",
+        depends=["inequality", "ccw_rotation_y_0", "ccw_rotation_y_1"],
+    )
     @given(cubes)
     def test_ccw_rotation_y_arbitrary(self, cube):
         rotated_cubes = []
@@ -1200,7 +1219,10 @@ class TestCube:
         cube_2._ht_rotation_y(1)
         assert cube_2 == gold_cube, f"{cube_2}\n{repr(cube_2)}"
 
-    @mark.dependency(depends=["inequality", "ht_rotation_y_0", "ht_rotation_y_1"])
+    @mark.dependency(
+        name="ht_rotation_y_arbitrary",
+        depends=["inequality", "ht_rotation_y_0", "ht_rotation_y_1"],
+    )
     @given(cubes)
     def test_ht_rotation_y_arbitrary(self, cube):
         rotated_cubes = []
@@ -1367,7 +1389,10 @@ class TestCube:
         cube_2._cw_rotation_z(1)
         assert cube_2 == gold_cube, f"{cube_2}\n{repr(cube_2)}"
 
-    @mark.dependency(depends=["inequality", "cw_rotation_z_0", "cw_rotation_z_1"])
+    @mark.dependency(
+        name="cw_rotation_z_arbitrary",
+        depends=["inequality", "cw_rotation_z_0", "cw_rotation_z_1"],
+    )
     @given(cubes)
     def test_cw_rotation_z_arbitrary(self, cube):
         rotated_cubes = []
@@ -1534,7 +1559,10 @@ class TestCube:
         cube._ccw_rotation_z(1)
         assert cube_2 == cube, f"{cube}\n{repr(cube)}"
 
-    @mark.dependency(depends=["inequality", "ccw_rotation_z_0", "ccw_rotation_z_1"])
+    @mark.dependency(
+        name="ccw_rotation_z_arbitrary",
+        depends=["inequality", "ccw_rotation_z_0", "ccw_rotation_z_1"],
+    )
     @given(cubes)
     def test_ccw_rotation_z_arbitrary(self, cube):
         rotated_cubes = []
@@ -1701,7 +1729,10 @@ class TestCube:
         cube_2._ht_rotation_z(1)
         assert cube_2 == cube, f"{cube}\n{repr(cube)}"
 
-    @mark.dependency(depends=["inequality", "ht_rotation_z_0", "ht_rotation_z_1"])
+    @mark.dependency(
+        name="ht_rotation_z_arbitrary",
+        depends=["inequality", "ht_rotation_z_0", "ht_rotation_z_1"],
+    )
     @given(cubes)
     def test_ht_rotation_z_arbitrary(self, cube):
         rotated_cubes = []
@@ -1715,3 +1746,108 @@ class TestCube:
                 assert cube_copy != rotated_cube, err_str
 
             rotated_cubes.append(cube_copy)
+
+    @mark.dependency(name="cw_rotation_x", depends=["equality", "from_faces"])
+    def test_cw_rotation_x(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.LEFT)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.RIGHT)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.LEFT)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.LEFT)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.LEFT)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._cw_rotation_x(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["cw_rotation_x_arbitrary", "cw_rotation_x"])
+    @given(cubes)
+    def test_cw_rotation_x_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._cw_rotation_x(i)
+        cube._cw_rotation_x(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(name="ccw_rotation_x", depends=["equality", "from_faces"])
+    def test_ccw_rotation_x(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.RIGHT)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.LEFT)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.RIGHT)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.RIGHT)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.RIGHT)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.RIGHT)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._ccw_rotation_x(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["ccw_rotation_x_arbitrary", "ccw_rotation_x"])
+    @given(cubes)
+    def test_ccw_rotation_x_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._ccw_rotation_x(i)
+        cube._ccw_rotation_x(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(name="ht_rotation_x", depends=["equality", "from_faces"])
+    def test_ht_rotation_x(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.DOWN)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.DOWN)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.DOWN)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.DOWN)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.DOWN)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.DOWN)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._ht_rotation_x(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["ht_rotation_x_arbitrary", "ht_rotation_x"])
+    @given(cubes)
+    def test_ht_rotation_x_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._ht_rotation_x(i)
+        cube._ht_rotation_x(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
