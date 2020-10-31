@@ -204,6 +204,49 @@ class Cube:
         down_face.apply_slice(left_slice, down_index)
         right_face.apply_slice(down_slice, right_index)
 
+    def _ccw_rotation_x(self, layer):
+        """Does a counter-clockwise rotation of a given layer in the x-axis.
+
+        The x-axis is orthogonal to the front and back faces. The positive
+        direction of the x-axis is incident on the back face and exits the
+        front face. The direction of rotation is defined with respect to
+        the positive x-axis.
+        """
+        assert layer >= 0 and layer < self.N
+
+        if layer == 0:
+            back_face = self.faces[FaceEnum.BACK]
+            back_face.rotate_ccw()
+
+        if layer == self.last_layer:
+            front_face = self.faces[FaceEnum.FRONT]
+            front_face.rotate_cw()
+
+        up_face = self.faces[FaceEnum.UP]
+        up_index = layer
+        up_slice = up_face.get_row_slice(up_index)
+        up_slice = up_slice.rotate_cw()
+
+        left_face = self.faces[FaceEnum.LEFT]
+        left_index = layer
+        left_slice = left_face.get_col_slice(left_index)
+        left_slice = left_slice.rotate_cw()
+
+        down_face = self.faces[FaceEnum.DOWN]
+        down_index = self.last_layer - layer
+        down_slice = down_face.get_row_slice(down_index)
+        down_slice = down_slice.rotate_cw()
+
+        right_face = self.faces[FaceEnum.RIGHT]
+        right_index = self.last_layer - layer
+        right_slice = right_face.get_col_slice(right_index)
+        right_slice = right_slice.rotate_cw()
+
+        up_face.apply_slice(left_slice, up_index)
+        left_face.apply_slice(down_slice, left_index)
+        down_face.apply_slice(right_slice, down_index)
+        right_face.apply_slice(up_slice, right_index)
+
     def _cw_rotation_y(self, layer):
         """Does a clockwise rotation of a given layer in the y-axis.
 
