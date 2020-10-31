@@ -409,7 +409,7 @@ class Cube:
         The y-axis is orthogonal to the front and back faces. The positive
         direction of the y-axis is incident on the left face and exits the
         right face. The direction of rotation is defined with respect to
-        the positive y-axis.
+        the positive y-axis. All layers are rotated when layer=-1.
         """
         assert layer >= -1 and layer < self.N
 
@@ -468,7 +468,7 @@ class Cube:
         The y-axis is orthogonal to the front and back faces. The positive
         direction of the y-axis is incident on the left face and exits the
         right face. The direction of rotation is defined with respect to
-        the positive y-axis.
+        the positive y-axis. All layers are rotated when layer=-1.
         """
         assert layer >= -1 and layer < self.N
 
@@ -527,7 +527,7 @@ class Cube:
         The z-axis is orthogonal to the up and down faces. The positive
         direction of the z-axis is incident on the down face and exits the
         up face. The direction of rotation is defined with respect to
-        the positive z-axis.
+        the positive z-axis. All layers are rotated when layer=-1.
         """
         assert layer >= -1 and layer < self.N
 
@@ -584,7 +584,7 @@ class Cube:
         The z-axis is orthogonal to the up and down faces. The positive
         direction of the z-axis is incident on the down face and exits the
         up face. The direction of rotation is defined with respect to
-        the positive z-axis.
+        the positive z-axis. All layers are rotated when layer=-1.
         """
         assert layer >= -1 and layer < self.N
 
@@ -641,7 +641,7 @@ class Cube:
         The z-axis is orthogonal to the up and down faces. The positive
         direction of the z-axis is incident on the down face and exits the
         up face. The direction of rotation is defined with respect to
-        the positive z-axis.
+        the positive z-axis. All layers are rotated when layer=-1.
         """
         assert layer >= -1 and layer < self.N
 
