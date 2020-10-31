@@ -350,40 +350,58 @@ class Cube:
         The y-axis is orthogonal to the front and back faces. The positive
         direction of the y-axis is incident on the left face and exits the
         right face. The direction of rotation is defined with respect to
-        the positive y-axis.
+        the positive y-axis. All layers are rotated when layer=-1.
         """
-        assert layer >= 0 and layer < self.N
+        assert layer >= -1 and layer < self.N
 
-        if layer == 0:
+        if layer == -1:
             left_face = self.faces[FaceEnum.LEFT]
             left_face.rotate_cw()
 
-        if layer == self.last_layer:
             right_face = self.faces[FaceEnum.RIGHT]
             right_face.rotate_ccw()
 
-        up_face = self.faces[FaceEnum.UP]
-        up_index = layer
-        up_slice = up_face.get_col_slice(up_index)
+            up_face = self.faces[FaceEnum.UP]
+            down_face = self.faces[FaceEnum.DOWN]
+            front_face = self.faces[FaceEnum.FRONT]
+            back_face = self.faces[FaceEnum.BACK]
 
-        back_face = self.faces[FaceEnum.BACK]
-        back_index = self.last_layer - layer
-        back_slice = back_face.get_col_slice(back_index)
-        back_slice = back_slice.rotate_ht()
+            self.faces[FaceEnum.FRONT] = up_face
+            self.faces[FaceEnum.UP] = back_face.rotate_ht()
+            self.faces[FaceEnum.BACK] = down_face.rotate_ht()
+            self.faces[FaceEnum.DOWN] = front_face
 
-        down_face = self.faces[FaceEnum.DOWN]
-        down_index = layer
-        down_slice = down_face.get_col_slice(down_index)
-        down_slice = down_slice.rotate_ht()
+        else:
+            if layer == 0:
+                left_face = self.faces[FaceEnum.LEFT]
+                left_face.rotate_cw()
 
-        front_face = self.faces[FaceEnum.FRONT]
-        front_index = layer
-        front_slice = front_face.get_col_slice(front_index)
+            if layer == self.last_layer:
+                right_face = self.faces[FaceEnum.RIGHT]
+                right_face.rotate_ccw()
 
-        up_face.apply_slice(back_slice, up_index)
-        back_face.apply_slice(down_slice, back_index)
-        down_face.apply_slice(front_slice, down_index)
-        front_face.apply_slice(up_slice, front_index)
+            up_face = self.faces[FaceEnum.UP]
+            up_index = layer
+            up_slice = up_face.get_col_slice(up_index)
+
+            back_face = self.faces[FaceEnum.BACK]
+            back_index = self.last_layer - layer
+            back_slice = back_face.get_col_slice(back_index)
+            back_slice = back_slice.rotate_ht()
+
+            down_face = self.faces[FaceEnum.DOWN]
+            down_index = layer
+            down_slice = down_face.get_col_slice(down_index)
+            down_slice = down_slice.rotate_ht()
+
+            front_face = self.faces[FaceEnum.FRONT]
+            front_index = layer
+            front_slice = front_face.get_col_slice(front_index)
+
+            up_face.apply_slice(back_slice, up_index)
+            back_face.apply_slice(down_slice, back_index)
+            down_face.apply_slice(front_slice, down_index)
+            front_face.apply_slice(up_slice, front_index)
 
     def _ccw_rotation_y(self, layer):
         """Does a counter-clockwise rotation of a given layer in the y-axis.
@@ -393,38 +411,56 @@ class Cube:
         right face. The direction of rotation is defined with respect to
         the positive y-axis.
         """
-        assert layer >= 0 and layer < self.N
+        assert layer >= -1 and layer < self.N
 
-        if layer == 0:
+        if layer == -1:
             left_face = self.faces[FaceEnum.LEFT]
             left_face.rotate_ccw()
 
-        if layer == self.last_layer:
             right_face = self.faces[FaceEnum.RIGHT]
             right_face.rotate_cw()
 
-        up_face = self.faces[FaceEnum.UP]
-        up_index = layer
-        up_slice = up_face.get_col_slice(up_index)
-        up_slice = up_slice.rotate_ht()
+            up_face = self.faces[FaceEnum.UP]
+            down_face = self.faces[FaceEnum.DOWN]
+            front_face = self.faces[FaceEnum.FRONT]
+            back_face = self.faces[FaceEnum.BACK]
 
-        back_face = self.faces[FaceEnum.BACK]
-        back_index = self.last_layer - layer
-        back_slice = back_face.get_col_slice(back_index)
-        back_slice = back_slice.rotate_ht()
+            self.faces[FaceEnum.FRONT] = down_face
+            self.faces[FaceEnum.UP] = front_face
+            self.faces[FaceEnum.BACK] = up_face.rotate_ht()
+            self.faces[FaceEnum.DOWN] = back_face.rotate_ht()
 
-        down_face = self.faces[FaceEnum.DOWN]
-        down_index = layer
-        down_slice = down_face.get_col_slice(down_index)
+        else:
+            if layer == 0:
+                left_face = self.faces[FaceEnum.LEFT]
+                left_face.rotate_ccw()
 
-        front_face = self.faces[FaceEnum.FRONT]
-        front_index = layer
-        front_slice = front_face.get_col_slice(front_index)
+            if layer == self.last_layer:
+                right_face = self.faces[FaceEnum.RIGHT]
+                right_face.rotate_cw()
 
-        up_face.apply_slice(front_slice, up_index)
-        back_face.apply_slice(up_slice, back_index)
-        down_face.apply_slice(back_slice, down_index)
-        front_face.apply_slice(down_slice, front_index)
+            up_face = self.faces[FaceEnum.UP]
+            up_index = layer
+            up_slice = up_face.get_col_slice(up_index)
+            up_slice = up_slice.rotate_ht()
+
+            back_face = self.faces[FaceEnum.BACK]
+            back_index = self.last_layer - layer
+            back_slice = back_face.get_col_slice(back_index)
+            back_slice = back_slice.rotate_ht()
+
+            down_face = self.faces[FaceEnum.DOWN]
+            down_index = layer
+            down_slice = down_face.get_col_slice(down_index)
+
+            front_face = self.faces[FaceEnum.FRONT]
+            front_index = layer
+            front_slice = front_face.get_col_slice(front_index)
+
+            up_face.apply_slice(front_slice, up_index)
+            back_face.apply_slice(up_slice, back_index)
+            down_face.apply_slice(back_slice, down_index)
+            front_face.apply_slice(down_slice, front_index)
 
     def _ht_rotation_y(self, layer):
         """Does a half-turn rotation of a given layer in the y-axis.
@@ -434,38 +470,56 @@ class Cube:
         right face. The direction of rotation is defined with respect to
         the positive y-axis.
         """
-        assert layer >= 0 and layer < self.N
+        assert layer >= -1 and layer < self.N
 
-        if layer == 0:
+        if layer == -1:
             left_face = self.faces[FaceEnum.LEFT]
             left_face.rotate_ht()
 
-        if layer == self.last_layer:
             right_face = self.faces[FaceEnum.RIGHT]
             right_face.rotate_ht()
 
-        up_face = self.faces[FaceEnum.UP]
-        up_index = layer
-        up_slice = up_face.get_col_slice(up_index)
+            up_face = self.faces[FaceEnum.UP]
+            down_face = self.faces[FaceEnum.DOWN]
+            front_face = self.faces[FaceEnum.FRONT]
+            back_face = self.faces[FaceEnum.BACK]
 
-        back_face = self.faces[FaceEnum.BACK]
-        back_index = self.last_layer - layer
-        back_slice = back_face.get_col_slice(back_index)
-        back_slice = back_slice.rotate_ht()
+            self.faces[FaceEnum.FRONT] = back_face.rotate_ht()
+            self.faces[FaceEnum.UP] = down_face
+            self.faces[FaceEnum.BACK] = front_face.rotate_ht()
+            self.faces[FaceEnum.DOWN] = up_face
 
-        down_face = self.faces[FaceEnum.DOWN]
-        down_index = layer
-        down_slice = down_face.get_col_slice(down_index)
+        else:
+            if layer == 0:
+                left_face = self.faces[FaceEnum.LEFT]
+                left_face.rotate_ht()
 
-        front_face = self.faces[FaceEnum.FRONT]
-        front_index = layer
-        front_slice = front_face.get_col_slice(front_index)
-        front_slice = front_slice.rotate_ht()
+            if layer == self.last_layer:
+                right_face = self.faces[FaceEnum.RIGHT]
+                right_face.rotate_ht()
 
-        up_face.apply_slice(down_slice, up_index)
-        back_face.apply_slice(front_slice, back_index)
-        down_face.apply_slice(up_slice, down_index)
-        front_face.apply_slice(back_slice, front_index)
+            up_face = self.faces[FaceEnum.UP]
+            up_index = layer
+            up_slice = up_face.get_col_slice(up_index)
+
+            back_face = self.faces[FaceEnum.BACK]
+            back_index = self.last_layer - layer
+            back_slice = back_face.get_col_slice(back_index)
+            back_slice = back_slice.rotate_ht()
+
+            down_face = self.faces[FaceEnum.DOWN]
+            down_index = layer
+            down_slice = down_face.get_col_slice(down_index)
+
+            front_face = self.faces[FaceEnum.FRONT]
+            front_index = layer
+            front_slice = front_face.get_col_slice(front_index)
+            front_slice = front_slice.rotate_ht()
+
+            up_face.apply_slice(down_slice, up_index)
+            back_face.apply_slice(front_slice, back_index)
+            down_face.apply_slice(up_slice, down_index)
+            front_face.apply_slice(back_slice, front_index)
 
     def _cw_rotation_z(self, layer):
         """Does a clockwise rotation of a given layer in the z-axis.

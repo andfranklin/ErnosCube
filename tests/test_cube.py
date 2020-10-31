@@ -1851,3 +1851,108 @@ class TestCube:
             cube_copy._ht_rotation_x(i)
         cube._ht_rotation_x(-1)
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(name="cw_rotation_y", depends=["equality", "from_faces"])
+    def test_cw_rotation_y(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.UP)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.DOWN)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.RIGHT)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.LEFT)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.DOWN)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.UP)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._cw_rotation_y(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["cw_rotation_y_arbitrary", "cw_rotation_y"])
+    @given(cubes)
+    def test_cw_rotation_y_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._cw_rotation_y(i)
+        cube._cw_rotation_y(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(name="ccw_rotation_y", depends=["equality", "from_faces"])
+    def test_ccw_rotation_y(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.UP)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.DOWN)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.LEFT)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.RIGHT)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.UP)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.DOWN)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._ccw_rotation_y(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["ccw_rotation_y_arbitrary", "ccw_rotation_y"])
+    @given(cubes)
+    def test_ccw_rotation_y_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._ccw_rotation_y(i)
+        cube._ccw_rotation_y(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(name="ht_rotation_y", depends=["equality", "from_faces"])
+    def test_ht_rotation_y(self, cube_1):
+        faces = {}
+
+        stickers = [Sticker(FaceEnum.BACK, OrientEnum.DOWN)]
+        faces[FaceEnum.FRONT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.FRONT, OrientEnum.DOWN)]
+        faces[FaceEnum.BACK] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.LEFT, OrientEnum.DOWN)]
+        faces[FaceEnum.LEFT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.RIGHT, OrientEnum.DOWN)]
+        faces[FaceEnum.RIGHT] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.DOWN, OrientEnum.UP)]
+        faces[FaceEnum.UP] = Face(1, stickers)
+
+        stickers = [Sticker(FaceEnum.UP, OrientEnum.UP)]
+        faces[FaceEnum.DOWN] = Face(1, stickers)
+
+        gold_cube = Cube.from_faces(faces)
+        cube_1._ht_rotation_y(-1)
+        assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
+
+    @mark.dependency(depends=["ht_rotation_y_arbitrary", "ht_rotation_y"])
+    @given(cubes)
+    def test_ht_rotation_y_equiv(self, cube):
+        cube_copy = deepcopy(cube)
+        for i in range(cube.N):
+            cube_copy._ht_rotation_y(i)
+        cube._ht_rotation_y(-1)
+        assert cube == cube_copy, f"{cube}: {repr(cube)}"
