@@ -1,5 +1,5 @@
-from strategies import stickers, sticker_lists
-from hypothesis.strategies import lists, builds
+from strategies import sticker_lists
+from hypothesis.strategies import builds
 from ErnosCube.face_slices import RowFaceSlice, ColFaceSlice
 from copy import deepcopy
 

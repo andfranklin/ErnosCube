@@ -5,7 +5,7 @@ from ErnosCube.sticker import Sticker
 
 from strategies import stickers, sticker_matrices
 from utils import flatten, N_and_flatten
-from hypothesis.strategies import sampled_from, builds, lists, one_of, just
+from hypothesis.strategies import builds, lists, one_of, just
 
 face_from_sticker_matrix = lambda sm: Face(*N_and_flatten(sm))
 faces = builds(face_from_sticker_matrix, sticker_matrices)

@@ -5,9 +5,8 @@ from ErnosCube.face import Face
 from ErnosCube.face import RowFaceSlice, ColFaceSlice
 
 from plane_rotatable_tests import PlaneRotatableTests
-from hypothesis import given, example
-from hypothesis.strategies import data
-from strategies import face_enums, stickers, sticker_matrices
+from hypothesis import given
+from strategies import sticker_matrices
 from strategies_face import faces, faces_minus_c2, faces_minus_c4
 from utils import N_and_flatten
 from copy import deepcopy

@@ -3,7 +3,7 @@ from ErnosCube.face_enum import FaceEnum
 from ErnosCube.sticker import Sticker
 from ErnosCube.cube import Cube
 
-from hypothesis.strategies import sampled_from, builds, one_of, just
+from hypothesis.strategies import sampled_from, builds, one_of
 from hypothesis.strategies import lists, integers
 
 orient_enums = sampled_from(list(OrientEnum.__members__.values()))
