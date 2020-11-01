@@ -1770,7 +1770,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._cw_rotation_x(-1)
+        cube_1._cw_all_rotation_x()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["cw_rotation_x_arbitrary", "cw_rotation_x"])
@@ -1779,7 +1779,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._cw_rotation_x(i)
-        cube._cw_rotation_x(-1)
+        cube._cw_all_rotation_x()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ccw_rotation_x", depends=["equality", "from_faces"])
@@ -1805,7 +1805,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ccw_rotation_x(-1)
+        cube_1._ccw_all_rotation_x()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ccw_rotation_x_arbitrary", "ccw_rotation_x"])
@@ -1814,7 +1814,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ccw_rotation_x(i)
-        cube._ccw_rotation_x(-1)
+        cube._ccw_all_rotation_x()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ht_rotation_x", depends=["equality", "from_faces"])
@@ -1840,7 +1840,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ht_rotation_x(-1)
+        cube_1._ht_all_rotation_x()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ht_rotation_x_arbitrary", "ht_rotation_x"])
@@ -1849,7 +1849,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ht_rotation_x(i)
-        cube._ht_rotation_x(-1)
+        cube._ht_all_rotation_x()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="cw_rotation_y", depends=["equality", "from_faces"])
@@ -1875,7 +1875,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._cw_rotation_y(-1)
+        cube_1._cw_all_rotation_y()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["cw_rotation_y_arbitrary", "cw_rotation_y"])
@@ -1884,7 +1884,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._cw_rotation_y(i)
-        cube._cw_rotation_y(-1)
+        cube._cw_all_rotation_y()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ccw_rotation_y", depends=["equality", "from_faces"])
@@ -1910,7 +1910,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ccw_rotation_y(-1)
+        cube_1._ccw_all_rotation_y()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ccw_rotation_y_arbitrary", "ccw_rotation_y"])
@@ -1919,7 +1919,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ccw_rotation_y(i)
-        cube._ccw_rotation_y(-1)
+        cube._ccw_all_rotation_y()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ht_rotation_y", depends=["equality", "from_faces"])
@@ -1945,7 +1945,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ht_rotation_y(-1)
+        cube_1._ht_all_rotation_y()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ht_rotation_y_arbitrary", "ht_rotation_y"])
@@ -1954,7 +1954,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ht_rotation_y(i)
-        cube._ht_rotation_y(-1)
+        cube._ht_all_rotation_y()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="cw_rotation_z", depends=["equality", "from_faces"])
@@ -1980,7 +1980,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._cw_rotation_z(-1)
+        cube_1._cw_all_rotation_z()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["cw_rotation_z_arbitrary", "cw_rotation_z"])
@@ -1989,7 +1989,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._cw_rotation_z(i)
-        cube._cw_rotation_z(-1)
+        cube._cw_all_rotation_z()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ccw_rotation_z", depends=["equality", "from_faces"])
@@ -2015,7 +2015,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ccw_rotation_z(-1)
+        cube_1._ccw_all_rotation_z()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ccw_rotation_z_arbitrary", "ccw_rotation_z"])
@@ -2024,7 +2024,7 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ccw_rotation_z(i)
-        cube._ccw_rotation_z(-1)
+        cube._ccw_all_rotation_z()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(name="ht_rotation_z", depends=["equality", "from_faces"])
@@ -2050,7 +2050,7 @@ class TestCube:
         faces[FaceEnum.DOWN] = Face(1, stickers)
 
         gold_cube = Cube.from_faces(faces)
-        cube_1._ht_rotation_z(-1)
+        cube_1._ht_all_rotation_z()
         assert cube_1 == gold_cube, f"{cube_1}\n{repr(cube_1)}"
 
     @mark.dependency(depends=["ht_rotation_z_arbitrary", "ht_rotation_z"])
@@ -2059,5 +2059,5 @@ class TestCube:
         cube_copy = deepcopy(cube)
         for i in range(cube.N):
             cube_copy._ht_rotation_z(i)
-        cube._ht_rotation_z(-1)
+        cube._ht_all_rotation_z()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
