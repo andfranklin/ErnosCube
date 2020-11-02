@@ -3,6 +3,7 @@ from ErnosCube.orient_enum import OrientEnum
 from ErnosCube.sticker import Sticker
 from ErnosCube.face import Face
 from ErnosCube.face import RowFaceSlice, ColFaceSlice
+from ErnosCube.mag_enum import MagEnum
 
 from plane_rotatable_tests import PlaneRotatableTests
 from hypothesis import given
@@ -10,7 +11,7 @@ from strategies import sticker_matrices
 from strategies_face import faces, faces_minus_c2, faces_minus_c4
 from utils import N_and_flatten
 from copy import deepcopy
-from pytest import mark, fixture
+from pytest import mark, fixture, raises
 
 
 class TestFace(PlaneRotatableTests):
@@ -205,3 +206,62 @@ class TestFace(PlaneRotatableTests):
         face.apply_slice(face_slice, 0)
         for row_indx in range(face.N):
             assert face[row_indx, 0] == stickers[row_indx], f"\n{repr(face)}"
+
+    @mark.dependency(
+        depends=["equality", "deepcopy", "rotate_cw", "rotate_ccw", "rotate_ht"]
+    )
+    @given(faces)
+    def test_get_isomorphic_transform(self, arb_face):
+        _, a = self.stickers_and_face()
+
+        b = deepcopy(a)
+        assert a == b
+        transformation = a.get_isomorphic_transform(b)
+        assert transformation == MagEnum.NOTHING
+
+        b = deepcopy(a).rotate_cw()
+        assert a != b
+        transformation = a.get_isomorphic_transform(b)
+        assert transformation == MagEnum.CW
+
+        b = deepcopy(a).rotate_ccw()
+        assert a != b
+        transformation = a.get_isomorphic_transform(b)
+        assert transformation == MagEnum.CCW
+
+        b = deepcopy(a).rotate_ht()
+        assert a != b
+        transformation = a.get_isomorphic_transform(b)
+        assert transformation == MagEnum.HT
+
+        transformation = a.get_isomorphic_transform(arb_face)
+        if transformation is None:
+            for _ in range(4):
+                a.rotate_cw()
+                assert a != arb_face
+        else:
+            verified_isomorphic = False
+            for _ in range(4):
+                a.rotate_cw()
+                if a == arb_face:
+                    verified_isomorphic = True
+                    break
+            assert verified_isomorphic
+
+    @mark.dependency(
+        depends=["equality", "deepcopy", "rotate_cw", "rotate_ccw", "rotate_ht"]
+    )
+    @given(faces)
+    def test_rotate(self, a):
+        b = deepcopy(a)
+
+        assert a.rotate(MagEnum.NOTHING) == b
+        assert a.rotate_cw().rotate(MagEnum.CCW) == b
+        assert a.rotate_ht().rotate(MagEnum.HT) == b
+        assert a.rotate_ccw().rotate(MagEnum.CW) == b
+
+        with raises(AssertionError):
+            a.rotate(None)
+
+        with raises(Exception):
+            a.rotate(12)

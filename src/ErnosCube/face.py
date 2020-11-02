@@ -1,5 +1,6 @@
 from .plane_rotatable import PlaneRotatable
 from .face_slices import RowFaceSlice, ColFaceSlice
+from .mag_enum import MagEnum
 
 
 class Face(PlaneRotatable):
@@ -93,6 +94,60 @@ class Face(PlaneRotatable):
                 new_stickers[new_indx] = sticker
         self.stickers = new_stickers
         return self
+
+    def get_isomorphic_transform(self, other):
+        """Returns the isomorphic transfomation to reach the face passed in.
+
+        The transformation is encoded as a `MagEnum`. If there is no isomorphic
+        transformation between the two faces then this function returns `None`.
+        """
+        if self.N != other.N:
+            return None
+
+        if self == other:
+            return MagEnum.NOTHING
+
+        self.rotate_cw()
+        if self == other:
+            self.rotate_ccw()
+            return MagEnum.CW
+
+        self.rotate_cw()
+        if self == other:
+            self.rotate_ht()
+            return MagEnum.HT
+
+        self.rotate_cw()
+        if self == other:
+            self.rotate_cw()
+            return MagEnum.CCW
+
+        self.rotate_cw()
+        return None
+
+    def rotate(self, mag_enum):
+        """Appropriately rotates Face provided a `MagEnum`.
+
+        Returns `self` so that rotations can be chained together.
+        """
+        assert mag_enum is not None
+
+        if mag_enum == MagEnum.NOTHING:
+            return self
+
+        elif mag_enum == MagEnum.CW:
+            return self.rotate_cw()
+
+        elif mag_enum == MagEnum.HT:
+            return self.rotate_ht()
+
+        elif mag_enum == MagEnum.CCW:
+            return self.rotate_ccw()
+
+        else:
+            err_str = f"unexpected argument ({mag_enum}) used in "
+            err_str += "`Face.rotate`."
+            raise Exception(err_str)
 
     def get_row_slice(self, row_indx):
         assert row_indx >= 0 and row_indx < self.N
