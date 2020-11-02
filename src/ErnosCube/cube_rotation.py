@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from dataclasses import dataclass
+from .mag_enum import MagEnum
 
 
 class AxisEnum(Enum):
@@ -8,14 +9,8 @@ class AxisEnum(Enum):
     Z = auto()
 
 
-class MagEnum(Enum):
-    CW = auto()
-    CCW = auto()
-    HT = auto()
-
-
 @dataclass
-class Rotation:
+class CubeRotation:
     axis: AxisEnum
     mag: MagEnum
     layer: int
