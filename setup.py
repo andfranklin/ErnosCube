@@ -49,14 +49,22 @@ setup(
     keywords="rubiks",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
-        "Intended Audience :: Developers",
+        "Intended Audience :: Other Audience",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Topic :: Games/Entertainment :: Puzzle Games",
+        "Topic :: Games/Entertainment :: Simulation",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     test_suite="tests",
     tests_require=test_requirements,
     setup_requires=test_requirements,
     python_requires=">=3.8",
+    entry_points="""
+        [console_scripts]
+        ernos-cube=ErnosCube.scripts.command_line_simulator:cli
+    """,
 )
