@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-class MagEnum(Enum):
+class RotationEnum(Enum):
     NOTHING = auto()
     CW = auto()
     CCW = auto()

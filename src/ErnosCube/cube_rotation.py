@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from dataclasses import dataclass
-from .mag_enum import MagEnum
+from .rotation_enum import RotationEnum
 
 
 class AxisEnum(Enum):
@@ -12,7 +12,7 @@ class AxisEnum(Enum):
 @dataclass
 class CubeRotation:
     axis: AxisEnum
-    mag: MagEnum
+    rotation_enum: RotationEnum
     layer: int
 
     def __post_init__(self):

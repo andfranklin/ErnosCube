@@ -1,7 +1,8 @@
+from ErnosCube.rotation_enum import RotationEnum
 from hypothesis import given
 from hypothesis.strategies import data
 from copy import deepcopy
-from pytest import mark
+from pytest import mark, raises
 
 
 class PlaneRotatableTests:
@@ -217,3 +218,83 @@ class PlaneRotatableTests:
         obj = data.draw(self.objs_minus_c2)
         obj_copy = deepcopy(obj).rotate_ht()
         assert obj != obj_copy, f"failed for {str(obj)}\n{repr(obj)}"
+
+    @mark.dependency(
+        depends=[
+            "equality",
+            "deepcopy",
+            "rotate_cw",
+            "rotate_ccw",
+            "rotate_ht",
+            "objs_minus_c2",
+        ]
+    )
+    @given(data())
+    def test_get_iso_transform(self, data):
+        a = data.draw(self.objs_minus_c2)
+
+        b = deepcopy(a)
+        assert a == b
+        transformation = a.get_iso_transform(b)
+        err_str = f"{a}:\n{repr(a)}\n{transformation}"
+        assert transformation == RotationEnum.NOTHING, err_str
+
+        b = deepcopy(a).rotate_cw()
+        assert a != b
+        transformation = a.get_iso_transform(b)
+        err_str = f"{a}:\n{repr(a)}\n{transformation}"
+        assert transformation == RotationEnum.CW, err_str
+
+        b = deepcopy(a).rotate_ccw()
+        assert a != b
+        transformation = a.get_iso_transform(b)
+        err_str = f"{a}:\n{repr(a)}\n{transformation}"
+        assert transformation == RotationEnum.CCW, err_str
+
+        b = deepcopy(a).rotate_ht()
+        assert a != b
+        transformation = a.get_iso_transform(b)
+        err_str = f"{a}:\n{repr(a)}\n{transformation}"
+        assert transformation == RotationEnum.HT, err_str
+
+        c = data.draw(self.objs_minus_c4)
+        transformation = a.get_iso_transform(c)
+        err_str = f"{a}:\n{repr(a)}\n{c}:\n{repr(c)}\n{transformation}"
+        if transformation is None:
+            for _ in range(4):
+                a = a.rotate_cw()
+                assert a != c, err_str
+        else:
+            verified_isomorphic = False
+            for _ in range(4):
+                a = a.rotate_cw()
+                if a == c:
+                    verified_isomorphic = True
+                    break
+            assert verified_isomorphic, err_str
+
+    @mark.dependency(
+        depends=[
+            "equality",
+            "deepcopy",
+            "rotate_cw",
+            "rotate_ccw",
+            "rotate_ht",
+            "objs_minus_c4",
+        ]
+    )
+    @given(data())
+    def test_rotate(self, data):
+        a = data.draw(self.objs)
+        b = deepcopy(a)
+
+        assert a.rotate(RotationEnum.NOTHING) == b
+        assert a.rotate_cw().rotate(RotationEnum.CCW) == b
+        assert a.rotate_ht().rotate(RotationEnum.HT) == b
+        assert a.rotate_ccw().rotate(RotationEnum.CW) == b
+
+        with raises(AssertionError):
+            a.rotate(None)
+
+        with raises(Exception):
+            a.rotate(12)
