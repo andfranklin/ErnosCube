@@ -1,4 +1,3 @@
-from .orient_enum import OrientEnum
 from .plane_rotatable import PlaneRotatable
 from .face_slices import RowFaceSlice, ColFaceSlice
 

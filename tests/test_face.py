@@ -22,7 +22,7 @@ class TestFace(PlaneRotatableTests):
 
     @given(sticker_matrices)
     def construction_test(self, sticker_matrix):
-        face = Face(*N_and_flatten(sticker_matrix))
+        Face(*N_and_flatten(sticker_matrix))
 
     @fixture
     def front_face(self):

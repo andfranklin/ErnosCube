@@ -9,11 +9,12 @@ class Cube:
 
     Enables cube manipulations, and keeps track of sticker locations and
     orientations. The list of stickers (`self.stickers`) is maintained
-    only for memeory management of them (I know this isn't necessary for python.
-    Eventually, I would like to port this code to Rust of C++ so I can get
-    the speed of a compiled language that doesn't use garbage collection.
+    only for memeory management of them (I know this isn't necessary for
+    python. Eventually, I would like to port this code to Rust of C++ so I can
+    get the speed of a compiled language that doesn't use garbage collection.
     I'm trying to account for memory management now, to make the transition
-    easier later on). The faces (`self.faces`) are used to track their locations.
+    easier later on). The faces (`self.faces`) are used to track their
+    locations.
 
     ----
     Initialize with arguments:

@@ -7,7 +7,11 @@ from strategies import stickers, sticker_matrices
 from utils import flatten, N_and_flatten
 from hypothesis.strategies import builds, lists, one_of, just
 
-face_from_sticker_matrix = lambda sm: Face(*N_and_flatten(sm))
+
+def face_from_sticker_matrix(sticker_matrix):
+    return Face(*N_and_flatten(sticker_matrix))
+
+
 faces = builds(face_from_sticker_matrix, sticker_matrices)
 
 
@@ -33,7 +37,9 @@ faces_minus_c2 = one_of(faces_1, gen_faces_minus_c2(2), gen_faces_minus_c2(3))
 
 
 def gen_striped(n):
-    build_uniform_sticker_rows = lambda s: lists(just(s), min_size=n, max_size=n)
+    def build_uniform_sticker_rows(sticker):
+        return lists(just(sticker), min_size=n, max_size=n)
+
     uniform_sticker_rows = stickers.flatmap(build_uniform_sticker_rows)
     striped_sticker_mats = lists(uniform_sticker_rows, min_size=n, max_size=n)
     return builds(face_from_sticker_matrix, striped_sticker_mats)
