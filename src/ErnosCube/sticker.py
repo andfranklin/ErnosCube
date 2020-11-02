@@ -12,15 +12,15 @@ class Sticker(PlaneRotatable):
         self.init_face_enum = init_face_enum
         self.orient_enum = orient_enum
 
-    def rotate_cw(self):
+    def _rotate_cw(self):
         self.orient_enum = self.orient_enum.rotate_cw()
         return self
 
-    def rotate_ccw(self):
+    def _rotate_ccw(self):
         self.orient_enum = self.orient_enum.rotate_ccw()
         return self
 
-    def rotate_ht(self):
+    def _rotate_ht(self):
         self.orient_enum = self.orient_enum.rotate_ht()
         return self
 

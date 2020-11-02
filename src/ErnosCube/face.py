@@ -52,7 +52,7 @@ class Face(PlaneRotatable):
         sticker_indx = self._get_sticker_indx(row_indx, col_indx)
         return self.stickers[sticker_indx]
 
-    def rotate_cw(self):
+    def _rotate_cw(self):
         old_stickers = self.stickers
         new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
@@ -66,7 +66,7 @@ class Face(PlaneRotatable):
         self.stickers = new_stickers
         return self
 
-    def rotate_ccw(self):
+    def _rotate_ccw(self):
         old_stickers = self.stickers
         new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
@@ -80,7 +80,7 @@ class Face(PlaneRotatable):
         self.stickers = new_stickers
         return self
 
-    def rotate_ht(self):
+    def _rotate_ht(self):
         old_stickers = self.stickers
         new_stickers = [None for _ in range(self.N * self.N)]
         for old_row in range(self.N):
@@ -95,6 +95,7 @@ class Face(PlaneRotatable):
         return self
 
     def get_row_slice(self, row_indx):
+        """Returns a RowSlice of the face."""
         assert row_indx >= 0 and row_indx < self.N
         stickers = [None for _ in range(self.N)]
         for col_indx in range(self.N):
@@ -103,6 +104,7 @@ class Face(PlaneRotatable):
         return RowFaceSlice(stickers)
 
     def get_col_slice(self, col_indx):
+        """Returns a ColSlice of the face."""
         assert col_indx >= 0 and col_indx < self.N
         stickers = [None for _ in range(self.N)]
         for row_indx in range(self.N):
@@ -111,6 +113,7 @@ class Face(PlaneRotatable):
         return ColFaceSlice(stickers)
 
     def apply_slice(self, slice, indx):
+        """Applys a slice to the face at the specified index."""
         if isinstance(slice, RowFaceSlice):
             for col_indx, sticker in enumerate(slice.stickers):
                 sticker_indx = self._get_sticker_indx(indx, col_indx)

@@ -57,9 +57,9 @@ class Cube:
             self.faces[face_enum] = Face(self.N, face_stickers)
 
         # Eventually, I would like to construct the face. It would have a
-        # static array of pointers to stickers. The stickers would be constructed
-        # here, in Cube. Then the pointers in each face would point to these
-        # stickers.
+        # static array of pointers to stickers. The stickers would be
+        # constructed here, in Cube. Then the pointers in each face would point
+        # to these stickers.
 
         # N_squared = self.N * self.N
         # for face_indx in range(self.n_faces):

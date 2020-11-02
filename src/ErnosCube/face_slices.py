@@ -1,5 +1,4 @@
 from .plane_rotatable import PlaneRotatable
-from abc import abstractmethod
 
 
 class FaceSlice(PlaneRotatable):
@@ -16,25 +15,17 @@ class FaceSlice(PlaneRotatable):
         els_eq = all(s1 == s2 for s1, s2 in zip(self.stickers, other.stickers))
         return same_type and els_eq
 
-    @abstractmethod
-    def __str__(self):
-        pass
-
-    @abstractmethod
-    def __repr__(self):
-        pass
-
 
 class RowFaceSlice(FaceSlice):
-    def rotate_cw(self):
+    def _rotate_cw(self):
         new_s = [sticker.rotate_cw() for sticker in self.stickers]
         return ColFaceSlice(new_s)
 
-    def rotate_ccw(self):
+    def _rotate_ccw(self):
         new_s = [sticker.rotate_ccw() for sticker in reversed(self.stickers)]
         return ColFaceSlice(new_s)
 
-    def rotate_ht(self):
+    def _rotate_ht(self):
         new_s = [sticker.rotate_ht() for sticker in reversed(self.stickers)]
         return RowFaceSlice(new_s)
 
@@ -46,15 +37,15 @@ class RowFaceSlice(FaceSlice):
 
 
 class ColFaceSlice(FaceSlice):
-    def rotate_cw(self):
+    def _rotate_cw(self):
         new_s = [sticker.rotate_cw() for sticker in reversed(self.stickers)]
         return RowFaceSlice(new_s)
 
-    def rotate_ccw(self):
+    def _rotate_ccw(self):
         new_s = [sticker.rotate_ccw() for sticker in self.stickers]
         return RowFaceSlice(new_s)
 
-    def rotate_ht(self):
+    def _rotate_ht(self):
         new_s = [sticker.rotate_ht() for sticker in reversed(self.stickers)]
         return ColFaceSlice(new_s)
 

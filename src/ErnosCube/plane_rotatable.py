@@ -16,31 +16,40 @@ class PlaneRotatable(ABC):
     def __ne__(self, other):
         return not (self == other)
 
-    @abstractmethod
     def rotate_cw(self):
         """Applys a clockwise rotation.
 
-        Warning: this method might mutate the object. It returns
+        Warning: this method might mutate the object. In general, it returns
         the object so that multiple rotations can be chained together.
         """
-        raise NotImplementedError
+        return self._rotate_cw()
 
-    @abstractmethod
     def rotate_ccw(self):
         """Applys a counter-clockwise rotation.
 
-        Warning: this method might mutate the object. It returns
+        Warning: this method might mutate the object. In general, it returns
         the object so that multiple rotations can be chained together.
         """
-        raise NotImplementedError
+        return self._rotate_ccw()
 
-    @abstractmethod
     def rotate_ht(self):
         """Applys a half-turn rotation.
 
-        Warning: this method might mutate the object. It returns
+        Warning: this method might mutate the object. In general, it returns
         the object so that multiple rotations can be chained together.
         """
+        return self._rotate_ht()
+
+    @abstractmethod
+    def _rotate_cw(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def _rotate_ccw(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def _rotate_ht(self):
         raise NotImplementedError
 
     def get_iso_transform(self, other):
