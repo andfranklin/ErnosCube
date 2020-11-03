@@ -43,3 +43,11 @@ class TestCommandLineSimulator:
         assert len(result.stdout) != 0, result.stdout
         assert len(result.stderr) != 0, result.stderr
         assert "Error" in result.stderr, result.stderr
+
+    @mark.dependency(name="no_show", depends=["exit"])
+    def test_no_show(self, runner):
+        result = runner.invoke(cli, ["--no-show"], input="exit\n")
+        assert result.exit_code == 0, result.stdout
+        assert len(result.stdout) > 0, result.stdout
+        assert result.stdout == "ernos-cube > exit\n", result.stdout
+        assert len(result.stderr) == 0, result.stderr

@@ -6,8 +6,11 @@ from ..cube import Cube
 @click.option(
     "--size", type=click.IntRange(min=1), default=3, help="Size of the Rubik's Cube."
 )
+@click.option(
+    "--show/--no-show", default=True, help="Show the cube after every command."
+)
 @click.version_option()
-def cli(size):
+def cli(size, show):
     """A command-line Rubik's Cube simulator."""
 
     cube = Cube(N=size)
@@ -16,7 +19,8 @@ def cli(size):
         if encountered_issue:
             encountered_issue = False
         else:
-            click.echo(repr(cube))
+            if show:
+                click.echo(repr(cube))
 
         value = click.prompt("ernos-cube", prompt_suffix=" > ", type=str)
         tokens = value.strip().lower().split(" ")
