@@ -135,6 +135,13 @@ class Cube:
         for row in self.get_face("down")._generate_repr_lines():
             yield padding + row
 
+    def get_raw_repr_size(self):
+        up_face = self.get_face("up")
+        face_size = up_face.get_raw_repr_size()
+        raw_repr_width = 4 * face_size
+        raw_repr_height = 3 * self.N
+        return (raw_repr_width, raw_repr_height)
+
     def __repr__(self):
         return "\n".join(self._generate_repr_lines())
 

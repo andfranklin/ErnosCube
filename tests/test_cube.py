@@ -172,6 +172,12 @@ class TestCube:
             repr(cube_3) == gold
         ), f"{cube_3}:\n{repr(cube_3)}\n\n{repr(repr(cube_3))}"
 
+    @mark.dependency(depends=["construction"])
+    def test_get_raw_repr_size(self, cube_3):
+        width, height = cube_3.get_raw_repr_size()
+        assert width == 36
+        assert height == 9
+
     @mark.dependency(name="deepcopy", depends=["construction"])
     @given(cubes)
     def test_deepcopy(self, cube):
