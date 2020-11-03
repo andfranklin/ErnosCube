@@ -2,6 +2,9 @@ from .face_enum import FaceEnum
 from .face import Face
 from .sticker import Sticker
 from .orient_enum import OrientEnum
+from .cube_rotation import CubeRotation
+from .axis_enum import AxisEnum
+from .rotation_enum import RotationEnum
 
 
 class Cube:
@@ -780,3 +783,83 @@ class Cube:
         self.faces[FaceEnum.RIGHT] = left_face
         self.faces[FaceEnum.BACK] = front_face
         self.faces[FaceEnum.LEFT] = right_face
+
+    def rotate(self, rotation):
+        """Conducts a rotation of the cube prescribed by a `CubeRotation`.
+
+        The x-axis is orthogonal to the front and back faces. The positive
+        direction of the x-axis is incident on the back face and exits the
+        front face. The direction of rotation is defined with respect to
+        the positive x-axis.
+
+        The y-axis is orthogonal to the front and back faces. The positive
+        direction of the y-axis is incident on the left face and exits the
+        right face. The direction of rotation is defined with respect to
+        the positive y-axis.
+
+        The z-axis is orthogonal to the up and down faces. The positive
+        direction of the z-axis is incident on the down face and exits the
+        up face. The direction of rotation is defined with respect to
+        the positive z-axis.
+        """
+        assert isinstance(rotation, CubeRotation)
+
+        if rotation.rotation_enum == RotationEnum.CW:
+            if rotation.axis == AxisEnum.X:
+                if rotation.layer == -1:
+                    self._cw_all_rotation_x()
+                else:
+                    self._cw_rotation_x(rotation.layer)
+
+            elif rotation.axis == AxisEnum.Y:
+                if rotation.layer == -1:
+                    self._cw_all_rotation_y()
+                else:
+                    self._cw_rotation_y(rotation.layer)
+
+            else:  # rotation.axis == AxisEnum.Z
+                if rotation.layer == -1:
+                    self._cw_all_rotation_z()
+                else:
+                    self._cw_rotation_z(rotation.layer)
+
+        elif rotation.rotation_enum == RotationEnum.CCW:
+            if rotation.axis == AxisEnum.X:
+                if rotation.layer == -1:
+                    self._ccw_all_rotation_x()
+                else:
+                    self._ccw_rotation_x(rotation.layer)
+
+            elif rotation.axis == AxisEnum.Y:
+                if rotation.layer == -1:
+                    self._ccw_all_rotation_y()
+                else:
+                    self._ccw_rotation_y(rotation.layer)
+
+            else:  # rotation.axis == AxisEnum.Z
+                if rotation.layer == -1:
+                    self._ccw_all_rotation_z()
+                else:
+                    self._ccw_rotation_z(rotation.layer)
+
+        elif rotation.rotation_enum == RotationEnum.HT:
+            if rotation.axis == AxisEnum.X:
+                if rotation.layer == -1:
+                    self._ht_all_rotation_x()
+                else:
+                    self._ht_rotation_x(rotation.layer)
+
+            elif rotation.axis == AxisEnum.Y:
+                if rotation.layer == -1:
+                    self._ht_all_rotation_y()
+                else:
+                    self._ht_rotation_y(rotation.layer)
+
+            else:  # rotation.axis == AxisEnum.Z
+                if rotation.layer == -1:
+                    self._ht_all_rotation_z()
+                else:
+                    self._ht_rotation_z(rotation.layer)
+
+        else:  # rotation.rotation_enum == RotationEnum.NOTHING
+            pass

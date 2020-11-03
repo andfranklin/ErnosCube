@@ -3,7 +3,8 @@ from ErnosCube.face_enum import FaceEnum
 from ErnosCube.sticker import Sticker
 from ErnosCube.cube import Cube
 from ErnosCube.rotation_enum import RotationEnum
-from ErnosCube.cube_rotation import AxisEnum, CubeRotation
+from ErnosCube.axis_enum import AxisEnum
+from ErnosCube.cube_rotation import CubeRotation
 
 from hypothesis.strategies import sampled_from, builds, one_of
 from hypothesis.strategies import lists, integers
@@ -21,6 +22,7 @@ def gen_sticker_matrix(n):
 
 sticker_matrices = one_of(gen_sticker_matrix(i) for i in range(1, 3))
 cubes = builds(Cube, integers(min_value=1, max_value=5))
+cubes_2 = builds(Cube, integers(min_value=2, max_value=2))
 
 axis_enums = sampled_from(list(AxisEnum.__members__.values()))
 rotation_enums = sampled_from(list(RotationEnum.__members__.values()))

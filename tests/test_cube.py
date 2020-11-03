@@ -3,9 +3,12 @@ from ErnosCube.face import Face
 from ErnosCube.sticker import Sticker
 from ErnosCube.face_enum import FaceEnum
 from ErnosCube.orient_enum import OrientEnum
+from ErnosCube.axis_enum import AxisEnum
+from ErnosCube.rotation_enum import RotationEnum
+from ErnosCube.cube_rotation import CubeRotation
 
 from utils import N_and_flatten
-from strategies import cubes
+from strategies import cubes, cubes_2
 from hypothesis import given
 from pytest import raises, mark, fixture
 from copy import deepcopy
@@ -2067,3 +2070,229 @@ class TestCube:
             cube_copy._ht_rotation_z(i)
         cube._ht_all_rotation_z()
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
+
+    @mark.dependency(
+        depends=[
+            "equality",
+            "deepcopy",
+            "cw_rotation_x_arbitrary",
+            "ccw_rotation_x_arbitrary",
+            "ht_rotation_x_arbitrary",
+            "cw_rotation_y_arbitrary",
+            "ccw_rotation_y_arbitrary",
+            "ht_rotation_y_arbitrary",
+            "cw_rotation_z_arbitrary",
+            "ccw_rotation_z_arbitrary",
+            "ht_rotation_z_arbitrary",
+        ]
+    )
+    @given(cubes_2)
+    def test_rotate(self, a):
+        b = deepcopy(a)
+
+        # cw x -1
+        axis_enum = AxisEnum.get_enum("x")
+        rotation_enum = RotationEnum.get_enum("cw")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_all_rotation_x()
+        a.rotate(rotation)
+        assert a == b
+
+        # cw x 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # cw x 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # cw y -1
+        axis_enum = AxisEnum.get_enum("y")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_all_rotation_y()
+        a.rotate(rotation)
+        assert a == b
+
+        # cw y 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # cw y 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # cw z -1
+        axis_enum = AxisEnum.get_enum("z")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_all_rotation_z()
+        a.rotate(rotation)
+        assert a == b
+
+        # cw z 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # cw z 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ccw_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw x -1
+        axis_enum = AxisEnum.get_enum("x")
+        rotation_enum = RotationEnum.get_enum("ccw")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_all_rotation_x()
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw x 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw x 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw y -1
+        axis_enum = AxisEnum.get_enum("y")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_all_rotation_y()
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw y 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw y 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw z -1
+        axis_enum = AxisEnum.get_enum("z")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_all_rotation_z()
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw z 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ccw z 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._cw_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht x -1
+        axis_enum = AxisEnum.get_enum("x")
+        rotation_enum = RotationEnum.get_enum("ht")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_all_rotation_x()
+        a.rotate(rotation)
+        assert a == b
+
+        # ht x 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht x 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_x(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht y -1
+        axis_enum = AxisEnum.get_enum("y")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_all_rotation_y()
+        a.rotate(rotation)
+        assert a == b
+
+        # ht y 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht y 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_y(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht z -1
+        axis_enum = AxisEnum.get_enum("z")
+        layer = -1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_all_rotation_z()
+        a.rotate(rotation)
+        assert a == b
+
+        # ht z 0
+        layer = 0
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        # ht z 1
+        layer = 1
+        rotation = CubeRotation(axis_enum, rotation_enum, layer)
+        a._ht_rotation_z(layer)
+        a.rotate(rotation)
+        assert a == b
+
+        with raises(AssertionError):
+            a.rotate(None)
+
+        with raises(Exception):
+            a.rotate(12)
