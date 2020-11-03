@@ -11,30 +11,37 @@ from ..cube import Cube
 )
 @click.version_option()
 def cli(size, show):
-    """A command-line Rubik's Cube simulator."""
+    """A command-line Rubik's Cube simulator.
+
+    All commands are case-insensitive.
+    """
 
     cube = Cube(N=size)
-    encountered_issue = evaluate_terminal_size(cube)
+    show_before_prompt = evaluate_terminal_size(cube)
     while True:
-        if encountered_issue:
-            encountered_issue = False
+        if show and show_before_prompt:
+            click.echo(repr(cube))
         else:
-            if show:
-                click.echo(repr(cube))
+            show_before_prompt = True
 
         value = click.prompt("ernos-cube", prompt_suffix=" > ", type=str)
         tokens = value.strip().lower().split(" ")
         if tokens[0] == "exit":
             break
 
+        elif tokens[0] == "show":
+            click.echo(repr(cube))
+            show_before_prompt = False
+
         else:
             error(f"unrecognized command ({repr(value)}).")
-            encountered_issue = True
+            show_before_prompt = True
 
     click.get_current_context().exit()
 
 
 def evaluate_terminal_size(cube):
+    show_before_prompt = True
     cube_size = cube.get_raw_repr_size()
     cube_width, cube_height = cube_size
 
@@ -47,8 +54,9 @@ def evaluate_terminal_size(cube):
         warn_str += f"{cube_size}, terminal size={term_size}). Please consider"
         warn_str += " making the terminal larger."
         warn(warn_str)
-        return True
-    return False
+        show_before_prompt = False
+
+    return show_before_prompt
 
 
 def warn(warn_str, err=True):

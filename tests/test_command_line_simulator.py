@@ -51,3 +51,37 @@ class TestCommandLineSimulator:
         assert len(result.stdout) > 0, result.stdout
         assert result.stdout == "ernos-cube > exit\n", result.stdout
         assert len(result.stderr) == 0, result.stderr
+
+    @mark.dependency(name="show_1", depends=["no_show"])
+    def test_show_1(self, runner):
+        result = runner.invoke(cli, ["--no-show"], input="show\nexit\n")
+
+        gold = "ernos-cube > show\n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n   "
+        gold += "       ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑ "
+        gold += " ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑"
+        gold += "  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑ "
+        gold += " ↑  ↑ \nernos-cube > exit\n"
+
+        assert result.exit_code == 0, result.stdout
+        assert len(result.stdout) > 0, result.stdout
+        assert result.stdout == gold, repr(result.stdout)
+        assert len(result.stderr) == 0, result.stderr
+
+    @mark.dependency(name="show_2", depends=["show_1"])
+    def test_show_2(self, runner):
+        result = runner.invoke(cli, [], input="show\nexit\n")
+
+        gold = "          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n ↑"
+        gold += "  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  "
+        gold += "↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n          "
+        gold += "↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \nernos-cube "
+        gold += "> show\n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  "
+        gold += "↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  "
+        gold += "↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n "
+        gold += "         ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n"
+        gold += "ernos-cube > exit\n"
+
+        assert result.exit_code == 0, result.stdout
+        assert len(result.stdout) > 0, result.stdout
+        assert result.stdout == gold, repr(result.stdout)
+        assert len(result.stderr) == 0, result.stderr
