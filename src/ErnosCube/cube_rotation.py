@@ -1,12 +1,6 @@
-from enum import Enum, auto
 from dataclasses import dataclass
+from .axis_enum import AxisEnum
 from .rotation_enum import RotationEnum
-
-
-class AxisEnum(Enum):
-    X = auto()
-    Y = auto()
-    Z = auto()
 
 
 @dataclass
