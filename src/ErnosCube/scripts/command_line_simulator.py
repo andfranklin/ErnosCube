@@ -1,6 +1,35 @@
 import click
 from ..cube import Cube
 
+help_str = """There are two classes of interpreter commands: general commands
+and cube manipulations. All commands for the `ernos-cube` interpreter are
+case-insensitive.
+
+GENERAL COMMANDS
+    help:  display this message.
+    show:  show the cube.
+    clear: clear the terminal.
+    exit:  exit the interpreter.
+
+CUBE MANIPULATIONS
+    cw <axis> <layer>
+    ccw <axis> <layer>
+    ht <axis> <layer>
+    scramble <number of moves>
+
+The `cw`, `ccw`, and `ht` commands invoke a clockwise, counter-clockwise or, a
+half-turn rotation on the cube about a specified axis, respectively. The
+argument, `<axis>`, must be `x`, `y`, or `z`. The optional argument, `<layer>`,
+may be an integer between 0 and N-1 (where N is the size of the cube). If
+`<layer>` is not specified then the entire cube is rotated about the specified
+`<axis>`.
+
+The command, `scramble`, (pseudo)randomly scrambles the cube by the specified
+number of moves. Warning: the moves might be negating. In other words, there is
+no guarantee that a random sequence of moves will not cancel-out, and
+effectively result in no mutation of the cube.
+"""
+
 
 @click.command()
 @click.option(
@@ -13,35 +42,53 @@ from ..cube import Cube
 def cli(size, show):
     """A command-line Rubik's Cube simulator.
 
-    All commands are case-insensitive.
+    For information about the available commands, type `help` into the
+    interactive interpreter.
     """
 
+    # setup
+    prompt_text = click.style("ernos-cube", bold=True, fg="green")
+    prompt_suffix = click.style("> ", bold=True, fg="green")
     cube = Cube(N=size)
-    show_before_prompt = evaluate_terminal_size(cube)
+    show_before_prompt = evaluate_terminal_size(cube, show)
+
+    # event loop
     while True:
-        if show and show_before_prompt:
+        # pre-processing
+        if show_before_prompt:
             click.echo(repr(cube))
-        else:
+
+        # reading next command
+        value = click.prompt(prompt_text, prompt_suffix=prompt_suffix, type=str)
+
+        # lexing
+        tokens = value.strip().lower().split(" ")
+
+        # parsing / interpreting
+        if tokens[0] == "show":
             show_before_prompt = True
 
-        value = click.prompt("ernos-cube", prompt_suffix=" > ", type=str)
-        tokens = value.strip().lower().split(" ")
-        if tokens[0] == "exit":
-            break
-
-        elif tokens[0] == "show":
-            click.echo(repr(cube))
+        elif tokens[0] == "help":
+            click.echo_via_pager(help_str)
             show_before_prompt = False
 
+        elif tokens[0] == "clear":
+            click.clear()
+            show_before_prompt = False
+
+        elif tokens[0] == "exit":
+            break
+
         else:
-            error(f"unrecognized command ({repr(value)}).")
-            show_before_prompt = True
+            err_str = f"unrecognized command ({repr(value)}). Type `help` to "
+            err_str += "see information about available commands."
+            error(err_str)
+            show_before_prompt = show
 
     click.get_current_context().exit()
 
 
-def evaluate_terminal_size(cube):
-    show_before_prompt = True
+def evaluate_terminal_size(cube, show_before_prompt):
     cube_size = cube.get_raw_repr_size()
     cube_width, cube_height = cube_size
 

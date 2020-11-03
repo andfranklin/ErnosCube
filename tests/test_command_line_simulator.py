@@ -8,8 +8,8 @@ class TestCommandLineSimulator:
     def runner(self):
         return CliRunner(mix_stderr=False)
 
-    @mark.dependency(name="help")
-    def test_help(self, runner):
+    @mark.dependency(name="cl_help")
+    def test_cl_help(self, runner):
         result = runner.invoke(cli, ["--help"])
         assert result.exit_code == 0, result.exit_code
         assert len(result.stdout) > 0, result.stdout
@@ -21,7 +21,7 @@ class TestCommandLineSimulator:
         assert len(result.stdout) > 0, result.stdout
         assert ", version " in result.stdout, result.stdout
 
-    @mark.dependency(name="exit", depends=["help"])
+    @mark.dependency(name="exit", depends=["cl_help"])
     def test_exit(self, runner):
         result = runner.invoke(cli, [], input="exit\n")
         assert result.exit_code == 0, result.stdout
@@ -32,7 +32,7 @@ class TestCommandLineSimulator:
     def test_terminal_size_warning(self, runner):
         result = runner.invoke(cli, ["--size", 7], input="exit\n")
         assert result.exit_code == 0, result.exit_code
-        assert result.stdout == "ernos-cube > exit\n", result.stdout
+        assert result.stdout == "ernos-cube> exit\n", result.stdout
         assert len(result.stderr) != 0, result.stderr
         assert "Warning" in result.stderr, result.stderr
 
@@ -49,18 +49,18 @@ class TestCommandLineSimulator:
         result = runner.invoke(cli, ["--no-show"], input="exit\n")
         assert result.exit_code == 0, result.stdout
         assert len(result.stdout) > 0, result.stdout
-        assert result.stdout == "ernos-cube > exit\n", result.stdout
+        assert result.stdout == "ernos-cube> exit\n", result.stdout
         assert len(result.stderr) == 0, result.stderr
 
     @mark.dependency(name="show_1", depends=["no_show"])
     def test_show_1(self, runner):
         result = runner.invoke(cli, ["--no-show"], input="show\nexit\n")
 
-        gold = "ernos-cube > show\n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n   "
+        gold = "ernos-cube> show\n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n   "
         gold += "       ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑ "
         gold += " ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑"
         gold += "  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑ "
-        gold += " ↑  ↑ \nernos-cube > exit\n"
+        gold += " ↑  ↑ \nernos-cube> exit\n"
 
         assert result.exit_code == 0, result.stdout
         assert len(result.stdout) > 0, result.stdout
@@ -74,14 +74,36 @@ class TestCommandLineSimulator:
         gold = "          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n ↑"
         gold += "  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  "
         gold += "↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n          "
-        gold += "↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \nernos-cube "
+        gold += "↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \nernos-cube"
         gold += "> show\n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  "
         gold += "↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  "
         gold += "↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n "
         gold += "         ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n"
-        gold += "ernos-cube > exit\n"
+        gold += "ernos-cube> exit\n"
 
         assert result.exit_code == 0, result.stdout
         assert len(result.stdout) > 0, result.stdout
         assert result.stdout == gold, repr(result.stdout)
+        assert len(result.stderr) == 0, result.stderr
+
+    @mark.dependency(name="clear", depends=["no_show"])
+    def test_clear(self, runner):
+        result = runner.invoke(cli, ["--no-show"], input="clear\nexit\n")
+
+        gold = "ernos-cube> clear\nernos-cube> exit\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, result.stdout
+        assert result.stdout == gold, repr(result.stdout)
+        assert len(result.stderr) == 0, result.stderr
+
+    @mark.dependency(name="command_help", depends=["no_show"])
+    def test_command_help(self, runner):
+        result = runner.invoke(cli, ["--no-show"], input="help\nexit\n")
+
+        part_gold = "ernos-cube> help\nThere are two classes of interpreter"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, result.stdout
+        assert part_gold in result.stdout, repr(result.stdout)
         assert len(result.stderr) == 0, result.stderr
