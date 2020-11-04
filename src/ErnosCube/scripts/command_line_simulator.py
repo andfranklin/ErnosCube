@@ -1,5 +1,9 @@
 import click
 from ..cube import Cube
+from ..rotation_enum import RotationEnum
+from ..axis_enum import AxisEnum
+from ..cube_rotation import CubeRotation
+
 
 help_str = """There are two classes of interpreter commands: general commands
 and cube manipulations. All commands for the `ernos-cube` interpreter are
@@ -20,9 +24,9 @@ CUBE MANIPULATIONS
 The `cw`, `ccw`, and `ht` commands invoke a clockwise, counter-clockwise or, a
 half-turn rotation on the cube about a specified axis, respectively. The
 argument, `<axis>`, must be `x`, `y`, or `z`. The optional argument, `<layer>`,
-may be an integer between 0 and N-1 (where N is the size of the cube). If
-`<layer>` is not specified then the entire cube is rotated about the specified
-`<axis>`.
+may be an integer between -1 and N-1 (where N is the size of the cube). If
+`<layer>` is not specified, or if it is specified as -1, then the entire cube
+is rotated about the specified `<axis>`.
 
 The command, `scramble`, (pseudo)randomly scrambles the cube by the specified
 number of moves. Warning: the moves might be negating. In other words, there is
@@ -65,7 +69,47 @@ def cli(size, show):
         tokens = value.strip().lower().split(" ")
 
         # parsing / interpreting
-        if tokens[0] == "show":
+        if len(tokens) > 1:  # Apply a rotation to the cube
+            show_before_prompt = show
+
+            try:
+                rotation_enum = RotationEnum.get_enum(tokens[0])
+            except KeyError:
+                err_str = f"unrecognized rotation specification: "
+                err_str += f"{repr(tokens[0])}. A rotation can be specified "
+                err_str += "as '(cw|ccw|ht) <axis> <layer>'."
+                error(err_str)
+                continue
+
+            try:
+                axis_enum = AxisEnum.get_enum(tokens[1])
+            except KeyError:
+                err_str = f"unrecognized axis specification: "
+                err_str += f"{repr(tokens[1])}. An axis can be specified as "
+                err_str += "'(x|y|z)'."
+                error(err_str)
+                continue
+
+            if len(tokens) == 2:
+                layer = -1
+            elif len(tokens) == 3:
+                layer = int(tokens[2])
+                if layer < -1 or layer >= size:
+                    err_str = f"the layer of a rotation must be between -1 and"
+                    err_str += f" {size-1}. The user supplied {layer} "
+                    err_str += f"({repr(value)})."
+                    error(err_str)
+                    continue
+            else:
+                err_str = f"unrecognized command ({repr(value)}). A rotation "
+                err_str += "can be specified as '(cw|ccw|ht) <axis> <layer>'."
+                error(err_str)
+                continue
+
+            cube_rotation = CubeRotation(axis_enum, rotation_enum, layer)
+            cube.rotate(cube_rotation)
+
+        elif tokens[0] == "show":
             show_before_prompt = True
 
         elif tokens[0] == "help":
@@ -80,8 +124,7 @@ def cli(size, show):
             break
 
         else:
-            err_str = f"unrecognized command ({repr(value)}). Type `help` to "
-            err_str += "see information about available commands."
+            err_str = f"unrecognized command ({repr(value)})."
             error(err_str)
             show_before_prompt = show
 
@@ -113,4 +156,5 @@ def warn(warn_str, err=True):
 
 def error(error_str):
     error_tag = click.style("Error", fg="red", bold=True)
-    click.echo(click.wrap_text(f"{error_tag}: {error_str}"), err=True)
+    error_str = f"{error_tag}: {error_str} Type `help` for more information."
+    click.echo(click.wrap_text(error_str), err=True)
