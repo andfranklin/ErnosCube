@@ -2072,6 +2072,7 @@ class TestCube:
         assert cube == cube_copy, f"{cube}: {repr(cube)}"
 
     @mark.dependency(
+        name="rotate",
         depends=[
             "equality",
             "deepcopy",
@@ -2084,7 +2085,7 @@ class TestCube:
             "cw_rotation_z_arbitrary",
             "ccw_rotation_z_arbitrary",
             "ht_rotation_z_arbitrary",
-        ]
+        ],
     )
     @given(cubes_2)
     def test_rotate(self, a):
@@ -2291,8 +2292,15 @@ class TestCube:
         a.rotate(rotation)
         assert a == b
 
+    @mark.dependency(name="rotate_fail", depends=["rotate"])
+    @given(cubes_2)
+    def test_rotate_fail(self, cube):
         with raises(AssertionError):
-            a.rotate(None)
+            cube.rotate(None)
 
         with raises(Exception):
-            a.rotate(12)
+            cube.rotate(12)
+
+        invalid_rotation = CubeRotation(AxisEnum.X, RotationEnum.CW, 3)
+        with raises(AssertionError):
+            cube.rotate(invalid_rotation)

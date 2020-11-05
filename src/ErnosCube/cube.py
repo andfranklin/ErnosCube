@@ -803,6 +803,7 @@ class Cube:
         the positive z-axis.
         """
         assert isinstance(rotation, CubeRotation)
+        assert rotation.layer < self.N, f"layer={rotation.layer}, N={self.N}"
 
         if rotation.rotation_enum == RotationEnum.CW:
             if rotation.axis == AxisEnum.X:
