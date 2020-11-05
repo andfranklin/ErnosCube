@@ -6,6 +6,9 @@ from .cube_rotation import CubeRotation
 from .axis_enum import AxisEnum
 from .rotation_enum import RotationEnum
 
+from random import choice
+from random import seed as init_seed
+
 
 class Cube:
     """An abstraction of a Rubik's Cube.
@@ -871,7 +874,7 @@ class Cube:
         The list includes the mutation that does nothing, all rotations that
         rotate the entire cube, and all rotations to each layer of the cube.
         """
-        manipulations = [
+        mutations = [
             CubeRotation.e,
             CubeRotation(AxisEnum.X, RotationEnum.CW, -1),
             CubeRotation(AxisEnum.X, RotationEnum.CCW, -1),
@@ -887,6 +890,27 @@ class Cube:
         for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
             for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
                 for layer in range(self.N):
-                    manipulations.append(CubeRotation(axis, rot, layer))
+                    mutations.append(CubeRotation(axis, rot, layer))
 
-        return manipulations
+        return mutations
+
+    def apply_rot_seq(self, seq):
+        for rotation in seq:
+            self.rotate(rotation)
+
+    def undo_rotation_seq(self, seq):
+        for rotation in reversed(seq):
+            self.rotate(rotation.inverse())
+
+    def scramble(self, N=20, seed=None):
+        init_seed(seed)
+        all_mutations = self.get_atomic_mutations()
+        layer_rotations = all_mutations[10:]
+
+        sequence = []
+        for _ in range(N):
+            rotation = choice(layer_rotations)
+            self.rotate(rotation)
+            sequence.append(rotation)
+
+        return sequence

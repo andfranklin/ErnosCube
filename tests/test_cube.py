@@ -2311,3 +2311,31 @@ class TestCube:
             cube = Cube(N=N)
             manipulations = cube.get_atomic_mutations()
             assert len(manipulations) == (9 * (N + 1)) + 1
+
+    @mark.dependency(name="scramble", depends=["rotate"])
+    @given(cubes)
+    def test_scramble(self, cube):
+        original = deepcopy(cube)
+        seq = cube.scramble(N=10, seed=42)
+        assert len(seq) == 10
+        assert cube != original
+
+    @mark.dependency(name="apply_rot_seq", depends=["scramble"])
+    @given(cubes)
+    def test_apply_rot_seq(self, cube):
+        original = deepcopy(cube)
+        seq = cube.scramble(N=10, seed=42)
+        assert len(seq) == 10
+        assert cube != original
+        original.apply_rot_seq(seq)
+        assert cube == original
+
+    @mark.dependency(name="undo_rotation_seq", depends=["scramble"])
+    @given(cubes)
+    def test_undo_rotation_seq(self, cube):
+        original = deepcopy(cube)
+        seq = cube.scramble(N=10, seed=42)
+        assert len(seq) == 10
+        assert cube != original
+        cube.undo_rotation_seq(seq)
+        assert cube == original
