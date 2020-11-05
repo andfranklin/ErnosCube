@@ -2304,3 +2304,10 @@ class TestCube:
         invalid_rotation = CubeRotation(AxisEnum.X, RotationEnum.CW, 3)
         with raises(AssertionError):
             cube.rotate(invalid_rotation)
+
+    @mark.dependency(name="get_atomic_mutations", depends=["construction"])
+    def test_get_atomic_mutations(self):
+        for N in range(1, 6):
+            cube = Cube(N=N)
+            manipulations = cube.get_atomic_mutations()
+            assert len(manipulations) == (9 * (N + 1)) + 1

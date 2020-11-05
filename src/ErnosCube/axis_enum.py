@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 
 class AxisEnum(Enum):
+    NOTHING = auto()
     X = auto()
     Y = auto()
     Z = auto()

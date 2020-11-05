@@ -13,6 +13,9 @@ class TestAxisEnum:
         assert AxisEnum.get_enum("z") == AxisEnum.Z
         assert AxisEnum.get_enum("Z") == AxisEnum.Z
 
+        assert AxisEnum.get_enum("nothing") == AxisEnum.NOTHING
+        assert AxisEnum.get_enum("NOTHING") == AxisEnum.NOTHING
+
     def test_get_enum_failure_1(self):
         with raises(Exception):
             AxisEnum.get_enum("a")
@@ -23,7 +26,7 @@ class TestAxisEnum:
 
     @mark.dependency(name="items")
     def test_items(self):
-        assert len(AxisEnum.items()) == 3
+        assert len(AxisEnum.items()) == 4
 
     @mark.dependency(depends=["items"])
     def test_get_enum_trivial(self):

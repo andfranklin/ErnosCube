@@ -864,3 +864,29 @@ class Cube:
 
         else:  # rotation.rotation_enum == RotationEnum.NOTHING
             pass
+
+    def get_atomic_mutations(self):
+        """Returns all of atomic mutations that may be applied to the cube.
+
+        The list includes the mutation that does nothing, all rotations that
+        rotate the entire cube, and all rotations to each layer of the cube.
+        """
+        manipulations = [
+            CubeRotation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1),
+            CubeRotation(AxisEnum.X, RotationEnum.CW, -1),
+            CubeRotation(AxisEnum.X, RotationEnum.CCW, -1),
+            CubeRotation(AxisEnum.X, RotationEnum.HT, -1),
+            CubeRotation(AxisEnum.Y, RotationEnum.CW, -1),
+            CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1),
+            CubeRotation(AxisEnum.Y, RotationEnum.HT, -1),
+            CubeRotation(AxisEnum.Z, RotationEnum.CW, -1),
+            CubeRotation(AxisEnum.Z, RotationEnum.CCW, -1),
+            CubeRotation(AxisEnum.Z, RotationEnum.HT, -1),
+        ]
+
+        for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
+            for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
+                for layer in range(self.N):
+                    manipulations.append(CubeRotation(axis, rot, layer))
+
+        return manipulations
