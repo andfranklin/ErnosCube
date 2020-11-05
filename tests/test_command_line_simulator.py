@@ -152,9 +152,8 @@ class TestCommandLineSimulator:
 
         stdout_gold = "ernos-cube> zw z 2\nernos-cube> exit\n"
 
-        stderr_gold = "Error: unrecognized rotation specification: 'zw'. A "
-        stderr_gold += "rotation can\nbe specified as '(cw|ccw|ht) <axis> "
-        stderr_gold += "<layer>'. Type `help` for more\ninformation.\n"
+        stderr_gold = "Error: unrecognized command ('zw z 2'). Type `help` "
+        stderr_gold += "for more\ninformation.\n"
 
         assert result.exit_code == 0, result.exit_code
         assert len(result.stdout) > 0, result.stdout

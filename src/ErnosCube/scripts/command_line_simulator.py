@@ -69,45 +69,13 @@ def cli(size, show):
         tokens = value.strip().lower().split(" ")
 
         # parsing / interpreting
-        if len(tokens) > 1:  # Apply a rotation to the cube
+        if tokens[0] == "cw" or tokens[0] == "ccw" or tokens[0] == "ht":
             show_before_prompt = show
-
-            try:
-                rotation_enum = RotationEnum.get_enum(tokens[0])
-            except KeyError:
-                err_str = f"unrecognized rotation specification: "
-                err_str += f"{repr(tokens[0])}. A rotation can be specified "
-                err_str += "as '(cw|ccw|ht) <axis> <layer>'."
-                error(err_str)
+            parse_success, data = parse_rotation_command(size, value, tokens)
+            if not parse_success:
+                show_before_prompt = False
                 continue
-
-            try:
-                axis_enum = AxisEnum.get_enum(tokens[1])
-            except KeyError:
-                err_str = f"unrecognized axis specification: "
-                err_str += f"{repr(tokens[1])}. An axis can be specified as "
-                err_str += "'(x|y|z)'."
-                error(err_str)
-                continue
-
-            if len(tokens) == 2:
-                layer = -1
-            elif len(tokens) == 3:
-                layer = int(tokens[2])
-                if layer < -1 or layer >= size:
-                    err_str = f"the layer of a rotation must be between -1 and"
-                    err_str += f" {size-1}. The user supplied {layer} "
-                    err_str += f"({repr(value)})."
-                    error(err_str)
-                    continue
-            else:
-                err_str = f"unrecognized command ({repr(value)}). A rotation "
-                err_str += "can be specified as '(cw|ccw|ht) <axis> <layer>'."
-                error(err_str)
-                continue
-
-            cube_rotation = CubeRotation(axis_enum, rotation_enum, layer)
-            cube.rotate(cube_rotation)
+            cube.rotate(CubeRotation(*data))
 
         elif tokens[0] == "show":
             show_before_prompt = True
@@ -147,6 +115,44 @@ def evaluate_terminal_size(cube, show_before_prompt):
         show_before_prompt = False
 
     return show_before_prompt
+
+
+def parse_rotation_command(size, value, tokens):
+    rotation_enum = RotationEnum.get_enum(tokens[0])
+
+    try:
+        axis_enum = AxisEnum.get_enum(tokens[1])
+    except KeyError:
+        err_str = f"unrecognized axis specification: "
+        err_str += f"{repr(tokens[1])}. An axis can be specified as "
+        err_str += "'(x|y|z)'."
+        error(err_str)
+        return False, None
+
+    if len(tokens) == 2:
+        layer = -1
+    elif len(tokens) == 3:
+        parse_layer_e = False
+
+        try:
+            layer = int(tokens[2])
+        except ValueError:
+            parse_layer_e = True
+
+        parse_layer_e = parse_layer_e or layer < -1 or layer >= size
+        if parse_layer_e:
+            err_str = f"the layer of a rotation must be between -1 and"
+            err_str += f" {size-1}. The user supplied {layer} "
+            err_str += f"({repr(value)})."
+            error(err_str)
+            return False, None
+    else:
+        err_str = f"unrecognized command ({repr(value)}). A rotation "
+        err_str += "can be specified as '(cw|ccw|ht) <axis> <layer>'."
+        error(err_str)
+        return False, None
+
+    return True, (axis_enum, rotation_enum, layer)
 
 
 def warn(warn_str, err=True):
