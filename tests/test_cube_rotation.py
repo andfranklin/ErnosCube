@@ -48,3 +48,15 @@ class TestCubeRotation:
         rotation_copy = deepcopy(cube_rotation)
         assert cube_rotation is not rotation_copy
         assert cube_rotation == rotation_copy
+
+    def test_inverse(self):
+        for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
+            for layer in range(-1, 5):
+                cw = CubeRotation(axis, RotationEnum.CW, layer)
+                ccw = CubeRotation(axis, RotationEnum.CCW, layer)
+                ht = CubeRotation(axis, RotationEnum.HT, layer)
+                assert cw.inverse() == ccw
+                assert ccw.inverse() == cw
+                assert ht.inverse() == ht
+
+        assert CubeRotation.e.inverse() == CubeRotation.e

@@ -806,57 +806,57 @@ class Cube:
         assert rotation.layer < self.N, f"layer={rotation.layer}, N={self.N}"
 
         if rotation.rotation_enum == RotationEnum.CW:
-            if rotation.axis == AxisEnum.X:
+            if rotation.axis_enum == AxisEnum.X:
                 if rotation.layer == -1:
                     self._cw_all_rotation_x()
                 else:
                     self._cw_rotation_x(rotation.layer)
 
-            elif rotation.axis == AxisEnum.Y:
+            elif rotation.axis_enum == AxisEnum.Y:
                 if rotation.layer == -1:
                     self._cw_all_rotation_y()
                 else:
                     self._cw_rotation_y(rotation.layer)
 
-            else:  # rotation.axis == AxisEnum.Z
+            else:  # rotation.axis_enum == AxisEnum.Z
                 if rotation.layer == -1:
                     self._cw_all_rotation_z()
                 else:
                     self._cw_rotation_z(rotation.layer)
 
         elif rotation.rotation_enum == RotationEnum.CCW:
-            if rotation.axis == AxisEnum.X:
+            if rotation.axis_enum == AxisEnum.X:
                 if rotation.layer == -1:
                     self._ccw_all_rotation_x()
                 else:
                     self._ccw_rotation_x(rotation.layer)
 
-            elif rotation.axis == AxisEnum.Y:
+            elif rotation.axis_enum == AxisEnum.Y:
                 if rotation.layer == -1:
                     self._ccw_all_rotation_y()
                 else:
                     self._ccw_rotation_y(rotation.layer)
 
-            else:  # rotation.axis == AxisEnum.Z
+            else:  # rotation.axis_enum == AxisEnum.Z
                 if rotation.layer == -1:
                     self._ccw_all_rotation_z()
                 else:
                     self._ccw_rotation_z(rotation.layer)
 
         elif rotation.rotation_enum == RotationEnum.HT:
-            if rotation.axis == AxisEnum.X:
+            if rotation.axis_enum == AxisEnum.X:
                 if rotation.layer == -1:
                     self._ht_all_rotation_x()
                 else:
                     self._ht_rotation_x(rotation.layer)
 
-            elif rotation.axis == AxisEnum.Y:
+            elif rotation.axis_enum == AxisEnum.Y:
                 if rotation.layer == -1:
                     self._ht_all_rotation_y()
                 else:
                     self._ht_rotation_y(rotation.layer)
 
-            else:  # rotation.axis == AxisEnum.Z
+            else:  # rotation.axis_enum == AxisEnum.Z
                 if rotation.layer == -1:
                     self._ht_all_rotation_z()
                 else:
@@ -872,7 +872,7 @@ class Cube:
         rotate the entire cube, and all rotations to each layer of the cube.
         """
         manipulations = [
-            CubeRotation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1),
+            CubeRotation.e,
             CubeRotation(AxisEnum.X, RotationEnum.CW, -1),
             CubeRotation(AxisEnum.X, RotationEnum.CCW, -1),
             CubeRotation(AxisEnum.X, RotationEnum.HT, -1),
