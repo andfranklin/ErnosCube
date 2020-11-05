@@ -224,3 +224,24 @@ class TestCommandLineSimulator:
         assert result.stdout == stdout_gold, repr(result.stdout)
         assert len(result.stderr) > 0, result.stderr
         assert result.stderr == stderr_gold, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble(self, runner):
+        input = "scramble 20 42\nexit\n"
+        result = runner.invoke(cli, [], input=input)
+
+        stdout_gold = "          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑ "
+        stdout_gold += " ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑"
+        stdout_gold += "  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ \n ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑ "
+        stdout_gold += " ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n   "
+        stdout_gold += "       ↑  ↑  ↑ \nernos-cube> scramble 20 42\n         "
+        stdout_gold += " ←  ↓  ← \n          ↑  ↓  ↑ \n          ↑  ↓  ↓ \n ↓ "
+        stdout_gold += " ←  ←  →  ←  ↑  ←  →  →  →  ↓  ↓ \n →  ↑  →  →  ↑  ↓  "
+        stdout_gold += "↓  ↑  ↓  →  ↑  → \n ←  ↓  ←  →  ↓  →  →  ↑  →  ←  ←  ←"
+        stdout_gold += " \n          ↓  ↑  → \n          ↑  ↑  ↑ \n          ↓"
+        stdout_gold += "  →  ↓ \nernos-cube> exit\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, result.stdout
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) == 0, result.stderr

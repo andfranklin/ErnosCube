@@ -6,20 +6,30 @@ from ..cube_rotation import CubeRotation
 
 
 help_str = """There are two classes of interpreter commands: general commands
-and cube manipulations. All commands for the `ernos-cube` interpreter are
+and basic cube manipulations. All commands for the `ernos-cube` interpreter are
 case-insensitive.
 
 GENERAL COMMANDS
-    help:  display this message.
-    show:  show the cube.
-    clear: clear the terminal.
-    exit:  exit the interpreter.
+    `help`
+        Display this message.
+    `show`
+        Show the cube.
+    `clear`
+        Clear the terminal.
+    `exit`
+        Exit the interpreter.
+    `scramble <number of random turns> <seed number to use>`
+        (Pseudo)randomly scrambles the cube a specified number of turns. A
+        user may optionally provide an integer to use as the seed in the random
+        number generator. Warning: the moves might be negating. In other words,
+        there is no guarantee (although it is very unlikely) that a random
+        sequence of moves will not cancel-out, and effectively result in no
+        mutation of the cube.
 
-CUBE MANIPULATIONS
-    cw <axis> <layer>
-    ccw <axis> <layer>
-    ht <axis> <layer>
-    scramble <number of moves>
+BASIC CUBE MANIPULATIONS
+    `cw <axis> <layer>`
+    `ccw <axis> <layer>`
+    `ht <axis> <layer>`
 
 The `cw`, `ccw`, and `ht` commands invoke a clockwise, counter-clockwise or, a
 half-turn rotation on the cube about a specified axis, respectively. The
@@ -27,20 +37,24 @@ argument, `<axis>`, must be `x`, `y`, or `z`. The optional argument, `<layer>`,
 may be an integer between -1 and N-1 (where N is the size of the cube). If
 `<layer>` is not specified, or if it is specified as -1, then the entire cube
 is rotated about the specified `<axis>`.
-
-The command, `scramble`, (pseudo)randomly scrambles the cube by the specified
-number of moves. Warning: the moves might be negating. In other words, there is
-no guarantee that a random sequence of moves will not cancel-out, and
-effectively result in no mutation of the cube.
 """
 
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
-@click.command()
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
-    "--size", type=click.IntRange(min=1), default=3, help="Size of the Rubik's Cube."
+    "-n",
+    "--size",
+    type=click.IntRange(min=1),
+    default=3,
+    help="Size of the Rubik's Cube.",
 )
 @click.option(
-    "--show/--no-show", default=True, help="Show the cube after every command."
+    "-s/-ns",
+    "--show/--no-show",
+    default=True,
+    help="Show the cube after every command.",
 )
 @click.version_option()
 def cli(size, show):
@@ -71,11 +85,21 @@ def cli(size, show):
         # parsing / interpreting
         if tokens[0] == "cw" or tokens[0] == "ccw" or tokens[0] == "ht":
             show_before_prompt = show
-            parse_success, data = parse_rotation_command(size, value, tokens)
-            if not parse_success:
+            data = parse_rotation_command(size, value, tokens)
+            if data is None:
                 show_before_prompt = False
                 continue
-            cube.rotate(CubeRotation(*data))
+            else:
+                cube.rotate(CubeRotation(*data))
+
+        elif tokens[0] == "scramble":
+            show_before_prompt = show
+            data = parse_scramble_command(size, value, tokens)
+            if data is None:
+                show_before_prompt = False
+                continue
+            else:
+                cube.scramble(*data)
 
         elif tokens[0] == "show":
             show_before_prompt = True
@@ -127,7 +151,7 @@ def parse_rotation_command(size, value, tokens):
         err_str += f"{repr(tokens[1])}. An axis can be specified as "
         err_str += "'(x|y|z)'."
         error(err_str)
-        return False, None
+        return None
 
     if len(tokens) == 2:
         layer = -1
@@ -145,14 +169,44 @@ def parse_rotation_command(size, value, tokens):
             err_str += f" {size-1}. The user supplied {layer} "
             err_str += f"({repr(value)})."
             error(err_str)
-            return False, None
+            return None
     else:
         err_str = f"unrecognized command ({repr(value)}). A rotation "
         err_str += "can be specified as '(cw|ccw|ht) <axis> <layer>'."
         error(err_str)
+        return None
+
+    return axis_enum, rotation_enum, layer
+
+
+def parse_scramble_command(size, value, tokens):
+    try:
+        N = int(tokens[1])
+    except KeyError:
+        err_str = f"invalid specification of the number of turns: "
+        err_str += f"{repr(tokens[1])}."
+        error(err_str)
+        return None
+
+    if len(tokens) == 2:
+        seed = None
+    elif len(tokens) == 3:
+
+        try:
+            seed = int(tokens[2])
+        except ValueError:
+            err_str = f"invalid specification of the seed: "
+            err_str += f"{repr(tokens[2])}."
+            error(err_str)
+            return None
+
+    else:
+        err_str = f"unrecognized command ({repr(value)}). A scramble "
+        err_str += "can be specified as 'scramble <N> <seed>'."
+        error(err_str)
         return False, None
 
-    return True, (axis_enum, rotation_enum, layer)
+    return N, seed
 
 
 def warn(warn_str, err=True):
