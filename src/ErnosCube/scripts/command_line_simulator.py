@@ -161,6 +161,7 @@ def parse_rotation_command(size, value, tokens):
         try:
             layer = int(tokens[2])
         except ValueError:
+            layer = repr(tokens[2])
             parse_layer_e = True
 
         parse_layer_e = parse_layer_e or layer < -1 or layer >= size
@@ -180,18 +181,32 @@ def parse_rotation_command(size, value, tokens):
 
 
 def parse_scramble_command(size, value, tokens):
-    try:
-        N = int(tokens[1])
-    except KeyError:
-        err_str = f"invalid specification of the number of turns: "
-        err_str += f"{repr(tokens[1])}."
+    if len(tokens) > 3:
+        err_str = f"unrecognized command ({repr(value)}). A scramble "
+        err_str += "can be specified as 'scramble <N> <seed>'."
         error(err_str)
-        return None
+        return False, None
 
-    if len(tokens) == 2:
-        seed = None
-    elif len(tokens) == 3:
+    # defaults
+    N = 20
+    seed = None
 
+    if len(tokens) > 1:
+        try:
+            N = int(tokens[1])
+        except ValueError:
+            err_str = f"invalid specification of the number of turns: "
+            err_str += f"{repr(tokens[1])}."
+            error(err_str)
+            return None
+
+        if N <= 0:
+            err_str = f"The specified number of turns must be a positive "
+            err_str += "number."
+            error(err_str)
+            return None
+
+    if len(tokens) > 2:
         try:
             seed = int(tokens[2])
         except ValueError:
@@ -199,12 +214,6 @@ def parse_scramble_command(size, value, tokens):
             err_str += f"{repr(tokens[2])}."
             error(err_str)
             return None
-
-    else:
-        err_str = f"unrecognized command ({repr(value)}). A scramble "
-        err_str += "can be specified as 'scramble <N> <seed>'."
-        error(err_str)
-        return False, None
 
     return N, seed
 

@@ -12,45 +12,45 @@ class TestCommandLineSimulator:
     def test_cl_help(self, runner):
         result = runner.invoke(cli, ["--help"])
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
 
     @mark.dependency(name="version")
     def test_version(self, runner):
         result = runner.invoke(cli, ["--version"])
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
-        assert ", version " in result.stdout, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert ", version " in result.stdout, repr(result.stdout)
 
     @mark.dependency(name="exit", depends=["cl_help"])
     def test_exit(self, runner):
         result = runner.invoke(cli, [], input="exit\n")
-        assert result.exit_code == 0, result.stdout
-        assert len(result.stdout) > 0, result.stdout
-        assert len(result.stderr) == 0, result.stderr
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_terminal_size_warning(self, runner):
         result = runner.invoke(cli, ["--size", 7], input="exit\n")
         assert result.exit_code == 0, result.exit_code
-        assert result.stdout == "ernos-cube> exit\n", result.stdout
-        assert len(result.stderr) != 0, result.stderr
-        assert "Warning" in result.stderr, result.stderr
+        assert result.stdout == "ernos-cube> exit\n", repr(result.stdout)
+        assert len(result.stderr) != 0, repr(result.stderr)
+        assert "Warning" in result.stderr, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_unrecognized_command_error(self, runner):
         result = runner.invoke(cli, [], input="qwerty123\nexit")
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) != 0, result.stdout
-        assert len(result.stderr) != 0, result.stderr
-        assert "Error" in result.stderr, result.stderr
+        assert len(result.stdout) != 0, repr(result.stdout)
+        assert len(result.stderr) != 0, repr(result.stderr)
+        assert "Error" in result.stderr, repr(result.stderr)
 
     @mark.dependency(name="no_show", depends=["exit"])
     def test_no_show(self, runner):
         result = runner.invoke(cli, ["--no-show"], input="exit\n")
-        assert result.exit_code == 0, result.stdout
-        assert len(result.stdout) > 0, result.stdout
-        assert result.stdout == "ernos-cube> exit\n", result.stdout
-        assert len(result.stderr) == 0, result.stderr
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == "ernos-cube> exit\n", repr(result.stdout)
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(name="show_1", depends=["no_show"])
     def test_show_1(self, runner):
@@ -62,10 +62,10 @@ class TestCommandLineSimulator:
         gold += "  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑ "
         gold += " ↑  ↑ \nernos-cube> exit\n"
 
-        assert result.exit_code == 0, result.stdout
-        assert len(result.stdout) > 0, result.stdout
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(name="show_2", depends=["show_1"])
     def test_show_2(self, runner):
@@ -81,10 +81,10 @@ class TestCommandLineSimulator:
         gold += "         ↑  ↑  ↑ \n          ↑  ↑  ↑ \n          ↑  ↑  ↑ \n"
         gold += "ernos-cube> exit\n"
 
-        assert result.exit_code == 0, result.stdout
-        assert len(result.stdout) > 0, result.stdout
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(name="clear", depends=["no_show"])
     def test_clear(self, runner):
@@ -93,9 +93,9 @@ class TestCommandLineSimulator:
         gold = "ernos-cube> clear\nernos-cube> exit\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(name="command_help", depends=["no_show"])
     def test_command_help(self, runner):
@@ -104,9 +104,9 @@ class TestCommandLineSimulator:
         part_gold = "ernos-cube> help\nThere are two classes of interpreter"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert part_gold in result.stdout, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_cw_rotation(self, runner):
@@ -123,9 +123,9 @@ class TestCommandLineSimulator:
         gold += "ernos-cube> exit\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_full_ccw_rotation(self, runner):
@@ -142,9 +142,9 @@ class TestCommandLineSimulator:
         gold += "ernos-cube> exit\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_rotation_error_1(self, runner):
@@ -156,9 +156,9 @@ class TestCommandLineSimulator:
         stderr_gold += "for more\ninformation.\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) > 0, result.stderr
+        assert len(result.stderr) > 0, repr(result.stderr)
         assert result.stderr == stderr_gold, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
@@ -172,9 +172,9 @@ class TestCommandLineSimulator:
         stderr_gold += " information.\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) > 0, result.stderr
+        assert len(result.stderr) > 0, repr(result.stderr)
         assert result.stderr == stderr_gold, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
@@ -188,9 +188,9 @@ class TestCommandLineSimulator:
         stderr_gold += "more information.\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) > 0, result.stderr
+        assert len(result.stderr) > 0, repr(result.stderr)
         assert result.stderr == stderr_gold, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
@@ -204,13 +204,29 @@ class TestCommandLineSimulator:
         stderr_gold += "more information.\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) > 0, result.stderr
+        assert len(result.stderr) > 0, repr(result.stderr)
         assert result.stderr == stderr_gold, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
     def test_rotation_error_5(self, runner):
+        result = runner.invoke(cli, ["--no-show"], input="cw x abc\nexit\n")
+
+        stdout_gold = "ernos-cube> cw x abc\nernos-cube> exit\n"
+
+        stderr_gold = "Error: the layer of a rotation must be between -1 and "
+        stderr_gold += "2. The user\nsupplied 'abc' ('cw x abc'). Type `help`"
+        stderr_gold += " for more information.\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) > 0, repr(result.stderr)
+        assert result.stderr == stderr_gold, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_rotation_error_6(self, runner):
         result = runner.invoke(cli, ["--no-show"], input="cw z 1 2\nexit\n")
 
         stdout_gold = "ernos-cube> cw z 1 2\nernos-cube> exit\n"
@@ -220,13 +236,22 @@ class TestCommandLineSimulator:
         stderr_gold += "Type `help` for more information.\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) > 0, result.stderr
+        assert len(result.stderr) > 0, repr(result.stderr)
         assert result.stderr == stderr_gold, repr(result.stderr)
 
     @mark.dependency(depends=["exit"])
-    def test_scramble(self, runner):
+    def test_scramble_1(self, runner):
+        input = "scramble\nexit\n"
+        result = runner.invoke(cli, [], input=input)
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert len(result.stderr) == 0, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble_2(self, runner):
         input = "scramble 20 42\nexit\n"
         result = runner.invoke(cli, [], input=input)
 
@@ -242,6 +267,71 @@ class TestCommandLineSimulator:
         stdout_gold += "  →  ↓ \nernos-cube> exit\n"
 
         assert result.exit_code == 0, result.exit_code
-        assert len(result.stdout) > 0, result.stdout
+        assert len(result.stdout) > 0, repr(result.stdout)
         assert result.stdout == stdout_gold, repr(result.stdout)
-        assert len(result.stderr) == 0, result.stderr
+        assert len(result.stderr) == 0, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble_error_1(self, runner):
+        input = "scramble abc\nexit\n"
+        result = runner.invoke(cli, ["--no-show"], input=input)
+
+        stdout_gold = "ernos-cube> scramble abc\nernos-cube> exit\n"
+
+        stderr_gold = "Error: invalid specification of the number of turns: "
+        stderr_gold += "'abc'. Type\n`help` for more information.\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) > 0, repr(result.stderr)
+        assert result.stderr == stderr_gold, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble_error_2(self, runner):
+        input = "scramble 0\nexit\n"
+        result = runner.invoke(cli, ["--no-show"], input=input)
+
+        stdout_gold = "ernos-cube> scramble 0\nernos-cube> exit\n"
+
+        stderr_gold = "Error: The specified number of turns must be a positive"
+        stderr_gold += " number.\nType `help` for more information.\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) > 0, repr(result.stderr)
+        assert result.stderr == stderr_gold, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble_error_3(self, runner):
+        input = "scramble 1 abc\nexit\n"
+        result = runner.invoke(cli, ["--no-show"], input=input)
+
+        stdout_gold = "ernos-cube> scramble 1 abc\nernos-cube> exit\n"
+
+        stderr_gold = "Error: invalid specification of the seed: "
+        stderr_gold += "'abc'. Type `help` for\nmore information.\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) > 0, repr(result.stderr)
+        assert result.stderr == stderr_gold, repr(result.stderr)
+
+    @mark.dependency(depends=["exit"])
+    def test_scramble_error_4(self, runner):
+        input = "scramble 1 42 4\nexit\n"
+        result = runner.invoke(cli, ["--no-show"], input=input)
+
+        stdout_gold = "ernos-cube> scramble 1 42 4\nernos-cube> exit\n"
+
+        stderr_gold = "Error: unrecognized command ('scramble 1 42 4'). A "
+        stderr_gold += "scramble can\nbe specified as 'scramble <N> <seed>'. "
+        stderr_gold += "Type `help` for more information.\n"
+
+        assert result.exit_code == 0, result.exit_code
+        assert len(result.stdout) > 0, repr(result.stdout)
+        assert result.stdout == stdout_gold, repr(result.stdout)
+        assert len(result.stderr) > 0, repr(result.stderr)
+        assert result.stderr == stderr_gold, repr(result.stderr)
