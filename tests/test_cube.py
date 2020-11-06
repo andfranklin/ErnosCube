@@ -2305,11 +2305,11 @@ class TestCube:
         with raises(AssertionError):
             cube.rotate(invalid_rotation)
 
-    @mark.dependency(name="get_atomic_mutations", depends=["construction"])
-    def test_get_atomic_mutations(self):
+    @mark.dependency(name="get_all_atomic_rotations", depends=["construction"])
+    def test_get_all_atomic_rotations(self):
         for N in range(1, 6):
             cube = Cube(N=N)
-            manipulations = cube.get_atomic_mutations()
+            manipulations = cube.get_all_atomic_rotations()
             assert len(manipulations) == (9 * (N + 1)) + 1
 
     @mark.dependency(name="scramble", depends=["rotate"])
@@ -2320,14 +2320,14 @@ class TestCube:
         assert len(seq) == 10
         assert cube != original
 
-    @mark.dependency(name="apply_rot_seq", depends=["scramble"])
+    @mark.dependency(name="apply_rotation_seq", depends=["scramble"])
     @given(cubes)
-    def test_apply_rot_seq(self, cube):
+    def test_apply_rotation_seq(self, cube):
         original = deepcopy(cube)
         seq = cube.scramble(N=10, seed=42)
         assert len(seq) == 10
         assert cube != original
-        original.apply_rot_seq(seq)
+        original.apply_rotation_seq(seq)
         assert cube == original
 
     @mark.dependency(name="undo_rotation_seq", depends=["scramble"])
@@ -2339,3 +2339,180 @@ class TestCube:
         assert cube != original
         cube.undo_rotation_seq(seq)
         assert cube == original
+
+    @mark.dependency(name="get_iso_transform", depends=["rotate"])
+    @given(cubes_2)
+    def test_get_iso_transform(self, original):
+        transformed = deepcopy(original)
+
+        # the no-rotation rotation
+
+        rotation = CubeRotation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1)
+        transformed.rotate(rotation)
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        # all 1-off rotations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CCW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.HT, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.HT, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.CW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.CCW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        # a few 2-off rotations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, -1))
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1))
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        return_rotation = transformed.get_iso_transform(original)
+        transformed.apply_rotation_seq(return_rotation)
+        assert transformed == original
+
+        # non-isomorphic transformations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, 0))
+        return_rotation = transformed.get_iso_transform(original)
+        assert return_rotation is None
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, 1))
+        return_rotation = transformed.get_iso_transform(original)
+        assert return_rotation is None
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, 0))
+        return_rotation = transformed.get_iso_transform(original)
+        assert return_rotation is None
+
+    @mark.dependency(name="is_isomorphic", depends=["rotate"])
+    @given(cubes_2)
+    def test_is_isomorphic(self, original):
+        transformed = deepcopy(original)
+
+        # the no-rotation rotation
+
+        rotation = CubeRotation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1)
+        transformed.rotate(rotation)
+        assert transformed.is_isomorphic(original)
+
+        # all 1-off rotations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CCW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.HT, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.HT, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.CW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.CCW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, -1))
+        assert transformed.is_isomorphic(original)
+
+        # a few 2-off rotations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, -1))
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        assert transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1))
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, -1))
+        assert transformed.is_isomorphic(original)
+
+        # non-isomorphic transformations
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.X, RotationEnum.CW, 0))
+        assert not transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Y, RotationEnum.CCW, 1))
+        assert not transformed.is_isomorphic(original)
+
+        transformed = deepcopy(original)
+        transformed.rotate(CubeRotation(AxisEnum.Z, RotationEnum.HT, 0))
+        assert not transformed.is_isomorphic(original)

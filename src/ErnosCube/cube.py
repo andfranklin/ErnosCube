@@ -868,11 +868,12 @@ class Cube:
         else:  # rotation.rotation_enum == RotationEnum.NOTHING
             pass
 
-    def get_atomic_mutations(self):
-        """Returns all of atomic mutations that may be applied to the cube.
+    def get_isomorphic_rotations(self):
+        """Returns all of the gross rotations that may be applied to the cube.
 
-        The list includes the mutation that does nothing, all rotations that
-        rotate the entire cube, and all rotations to each layer of the cube.
+        The list includes the rotation that does nothing and all rotations that
+        rotate the entire cube. All of these rotations will result in an
+        isomorphic cube.
         """
         mutations = [
             CubeRotation.e,
@@ -886,6 +887,15 @@ class Cube:
             CubeRotation(AxisEnum.Z, RotationEnum.CCW, -1),
             CubeRotation(AxisEnum.Z, RotationEnum.HT, -1),
         ]
+        return mutations
+
+    def get_all_atomic_rotations(self):
+        """Returns all of atomic rotations that may be applied to the cube.
+
+        The list includes the rotation that does nothing, all rotations that
+        rotate the entire cube, and all rotations to each layer of the cube.
+        """
+        mutations = self.get_isomorphic_rotations()
 
         for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
             for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
@@ -894,7 +904,7 @@ class Cube:
 
         return mutations
 
-    def apply_rot_seq(self, seq):
+    def apply_rotation_seq(self, seq):
         for rotation in seq:
             self.rotate(rotation)
 
@@ -904,7 +914,7 @@ class Cube:
 
     def scramble(self, N=20, seed=None):
         init_seed(seed)
-        all_mutations = self.get_atomic_mutations()
+        all_mutations = self.get_all_atomic_rotations()
         layer_rotations = all_mutations[10:]
 
         sequence = []
@@ -914,3 +924,51 @@ class Cube:
             sequence.append(rotation)
 
         return sequence
+
+    def _get_possible_iso_transform(self, other):
+        """Returns the possible sequence of rotations that make the objs equal.
+
+        Note, this method mutates the cube in the process of constructing the
+        transformation list. However, the cube will be in it's original state
+        by the time the function completes.
+        """
+        other_back = other.faces[FaceEnum.BACK]
+        for rotation_a in self.get_isomorphic_rotations():
+            self.rotate(rotation_a)
+            self_back = self.faces[FaceEnum.BACK]
+            plane_rotation = self_back.get_iso_transform(other_back)
+            self.rotate(rotation_a.inverse())
+
+            if plane_rotation is not None:
+                if plane_rotation == RotationEnum.NOTHING:
+                    return [rotation_a]
+                else:
+                    rotation_b = CubeRotation(AxisEnum.X, plane_rotation, -1)
+                    return [rotation_a, rotation_b]
+
+        return None
+
+    def get_iso_transform(self, other):
+        """Returns the rotation sequence to reach the argument object.
+
+        The transformation is encoded as a `RotationEnum`. If there is no
+        isomorphic transformation between the two faces then this function
+        returns `None`.
+        """
+        possible_iso_transform = self._get_possible_iso_transform(other)
+        if possible_iso_transform is None:
+            return None
+
+        self.apply_rotation_seq(possible_iso_transform)
+        cubes_are_isomorphic = self == other
+        self.undo_rotation_seq(possible_iso_transform)
+
+        if cubes_are_isomorphic:
+            return possible_iso_transform
+        else:
+            return None
+
+    def is_isomorphic(self, other):
+        """Returns True iff the two objects are isomorphic to eachother."""
+        iso_transform = self.get_iso_transform(other)
+        return iso_transform is not None
