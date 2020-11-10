@@ -2,43 +2,45 @@ from ErnosCube.cube import Cube
 from copy import deepcopy
 
 
-class RotationContext:
-    def __init__(self, cube, rotation):
+class MutationContext:
+    def __init__(self, cube, mutation):
         self.cube = cube
-        self.rotation = rotation
+        self.mutation = mutation
 
     def __enter__(self):
-        self.cube.rotate(self.rotation)
+        self.cube.rotate(self.mutation)
         return self.cube
 
     def __exit__(self, type, value, traceback):
-        self.cube.rotate(self.rotation.inverse())
+        self.cube.rotate(self.mutation.inverse())
 
 
 class MutatedCube:
-    def __init__(self, cube, parent=None, rotation=None, rotation_sequence=None):
+    def __init__(self, cube, parent=None, mutation=None, mut_seq=None):
         self.cube = deepcopy(cube)
         self.parent = parent
-        self.rotation = rotation
+        self.mutation = mutation
         self.children = []
 
         if self.parent is None:
-            assert self.rotation is None
-            assert rotation_sequence is None
-            self.rotation_sequence = []
+            assert self.mutation is None
+            assert mut_seq is None
+            self.mut_seq = []
         else:
-            assert self.rotation is not None
+            assert self.mutation is not None
             self.parent.children.append(self)
-            if rotation_sequence is None:
-                self.rotation_sequence = self.make_rotation_sequence(rotation)
+            if mut_seq is None:
+                self.mut_seq = self.parent.make_mut_seq(self.mutation)
             else:
-                self.rotation_sequence = rotation_sequence
+                assert mut_seq[-1] == self.mutation
+                self.mut_seq = mut_seq
 
-    def make_rotation_sequence(self, rotation):
+    def make_mut_seq(self, mutation):
         if self.parent is None:
-            return [rotation]
+            assert self.mut_seq == []
+            return [mutation]
         else:
-            return [*self.rotation_sequence, rotation]
+            return [*self.mut_seq, mutation]
 
 
 class LayeredArray:
@@ -69,11 +71,11 @@ class LayeredArray:
         return self.data[layer_slice]
 
 
-def is_duplicate(rot_seq, duplic_mut_seqs):
-    for duplic_mut_seq in duplic_mut_seqs.data:
-        layer = len(duplic_mut_seq)
-        rots_iterator = zip(duplic_mut_seq, rot_seq[-layer:])
-        if all(duplic_rot == rot for duplic_rot, rot in rots_iterator):
+def is_duplicate(mut_seq, dup_mut_seqs):
+    for dup_mut_seq in dup_mut_seqs.data:
+        layer = len(dup_mut_seq)
+        muts_iterator = zip(dup_mut_seq, mut_seq[-layer:])
+        if all(duplic_mut == mut for duplic_mut, mut in muts_iterator):
             return True
     return False
 
@@ -87,26 +89,23 @@ def is_essentially_unique(cube, unique_cubes):
 
 def expand_layer(layer, unique_cubes, dup_mut_seqs):
     parents = unique_cubes.get_layer(layer - 1)
-    rotations = parents[0].cube.get_atomic_mutations()
+    mutations = parents[0].cube.get_atomic_mutations()
     for parent in parents:
         parent_cube_copy = deepcopy(parent.cube)
-        for rotation in rotations:
-            rot_seq = parent.make_rotation_sequence(rotation)
-            if is_duplicate(rot_seq, dup_mut_seqs):
-                dup_mut_seqs.append(rot_seq)
+        for mutation in mutations:
+            mut_seq = parent.make_mut_seq(mutation)
+            if is_duplicate(mut_seq, dup_mut_seqs):
+                dup_mut_seqs.append(mut_seq)
 
             else:
-                with RotationContext(parent_cube_copy, rotation) as candidate:
+                with MutationContext(parent_cube_copy, mutation) as candidate:
                     if is_essentially_unique(candidate, unique_cubes):
                         child = MutatedCube(
-                            candidate,
-                            parent=parent,
-                            rotation=rotation,
-                            rotation_sequence=rot_seq,
+                            candidate, parent=parent, mutation=mutation, mut_seq=mut_seq
                         )
                         unique_cubes.append(child)
                     else:
-                        dup_mut_seqs.append(rot_seq)
+                        dup_mut_seqs.append(mut_seq)
     unique_cubes.close_layer()
     dup_mut_seqs.close_layer()
 
