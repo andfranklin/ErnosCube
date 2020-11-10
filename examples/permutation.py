@@ -8,11 +8,11 @@ class MutationContext:
         self.mutation = mutation
 
     def __enter__(self):
-        self.cube.rotate(self.mutation)
+        self.cube.mutate(self.mutation)
         return self.cube
 
     def __exit__(self, type, value, traceback):
-        self.cube.rotate(self.mutation.inverse())
+        self.cube.mutate(self.mutation.inverse())
 
 
 class MutatedCube:
@@ -89,7 +89,7 @@ def is_essentially_unique(cube, unique_cubes):
 
 def expand_layer(layer, unique_cubes, dup_mut_seqs):
     parents = unique_cubes.get_layer(layer - 1)
-    mutations = parents[0].cube.get_atomic_mutations()
+    mutations = parents[0].cube.get_nonisomorphic_mutations()
     for parent in parents:
         parent_cube_copy = deepcopy(parent.cube)
         for mutation in mutations:
