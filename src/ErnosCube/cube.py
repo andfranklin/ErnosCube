@@ -940,19 +940,27 @@ class Cube:
         by the time the function completes.
         """
         other_back = other.faces[FaceEnum.BACK]
-        for mutation_a in self.get_isomorphic_mutations():
-            self.mutate(mutation_a)
-            self_back = self.faces[FaceEnum.BACK]
-            plane_mutation = self_back.get_iso_transform(other_back)
-            self.mutate(mutation_a.inverse())
-
-            if plane_mutation is not None:
-                if plane_mutation == RotationEnum.NOTHING:
-                    return [mutation_a]
-                else:
-                    mutation_b = CubeMutation(AxisEnum.X, plane_mutation, -1)
-                    return [mutation_a, mutation_b]
-
+        for axis_enum in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
+            raw_mutation = CubeMutation(axis_enum, RotationEnum.CW, -1)
+            for i in range(3):
+                self.mutate(raw_mutation)
+                self_back = self.faces[FaceEnum.BACK]
+                plane_mutation = self_back.get_iso_transform(other_back)
+                if plane_mutation is not None:
+                    if i == 0:
+                        rotation_a = RotationEnum.CW
+                    elif i == 1:
+                        rotation_a = RotationEnum.HT
+                    else:
+                        rotation_a = RotationEnum.CCW
+                    mutation_a = CubeMutation(axis_enum, rotation_a, -1)
+                    self.mutate(mutation_a.inverse())
+                    if plane_mutation == RotationEnum.NOTHING:
+                        return [mutation_a]
+                    else:
+                        mutation_b = CubeMutation(AxisEnum.X, plane_mutation, -1)
+                        return [mutation_a, mutation_b]
+            self.mutate(raw_mutation)
         return None
 
     def get_iso_transform(self, other):
