@@ -27,6 +27,19 @@ class Cube:
     - `N`, the side length (the cube is `N`x`N`x`N`)
     """
 
+    ISOMORPHIC_MUTATIONS = [
+        CubeMutation.e,
+        CubeMutation(AxisEnum.X, RotationEnum.CW, -1),
+        CubeMutation(AxisEnum.X, RotationEnum.CCW, -1),
+        CubeMutation(AxisEnum.X, RotationEnum.HT, -1),
+        CubeMutation(AxisEnum.Y, RotationEnum.CW, -1),
+        CubeMutation(AxisEnum.Y, RotationEnum.CCW, -1),
+        CubeMutation(AxisEnum.Y, RotationEnum.HT, -1),
+        CubeMutation(AxisEnum.Z, RotationEnum.CW, -1),
+        CubeMutation(AxisEnum.Z, RotationEnum.CCW, -1),
+        CubeMutation(AxisEnum.Z, RotationEnum.HT, -1),
+    ]
+
     def __init__(self, N=3, init=True):
         assert N > 0
         self.N = N
@@ -875,19 +888,7 @@ class Cube:
         rotate the entire cube. All of these mutations result in an isomorphic
         cube.
         """
-        mutations = [
-            CubeMutation.e,
-            CubeMutation(AxisEnum.X, RotationEnum.CW, -1),
-            CubeMutation(AxisEnum.X, RotationEnum.CCW, -1),
-            CubeMutation(AxisEnum.X, RotationEnum.HT, -1),
-            CubeMutation(AxisEnum.Y, RotationEnum.CW, -1),
-            CubeMutation(AxisEnum.Y, RotationEnum.CCW, -1),
-            CubeMutation(AxisEnum.Y, RotationEnum.HT, -1),
-            CubeMutation(AxisEnum.Z, RotationEnum.CW, -1),
-            CubeMutation(AxisEnum.Z, RotationEnum.CCW, -1),
-            CubeMutation(AxisEnum.Z, RotationEnum.HT, -1),
-        ]
-        return mutations
+        return Cube.ISOMORPHIC_MUTATIONS
 
     def get_nonisomorphic_mutations(self):
         """Returns all non-isomorphic mutations that may be applied to a cube.
@@ -907,8 +908,8 @@ class Cube:
         The list includes the mutation that does nothing, all rotations that
         rotate the entire cube, and rotations of each layer of the cube.
         """
-        mutations = self.get_isomorphic_mutations()
-        mutations.extend(self.get_nonisomorphic_mutations())
+        mutations = self.get_nonisomorphic_mutations()
+        mutations.extend(self.get_isomorphic_mutations())
         return mutations
 
     def apply_mutation_seq(self, seq):

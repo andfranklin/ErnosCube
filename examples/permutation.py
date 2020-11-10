@@ -87,12 +87,11 @@ def is_essentially_unique(cube, unique_cubes):
     return True
 
 
-def expand_layer(layer, unique_cubes, dup_mut_seqs):
+def expand_layer(layer, noniso_muts, unique_cubes, dup_mut_seqs):
     parents = unique_cubes.get_layer(layer - 1)
-    mutations = parents[0].cube.get_nonisomorphic_mutations()
     for parent in parents:
         parent_cube_copy = deepcopy(parent.cube)
-        for mutation in mutations:
+        for mutation in noniso_muts:
             mut_seq = parent.make_mut_seq(mutation)
             if is_duplicate(mut_seq, dup_mut_seqs):
                 dup_mut_seqs.append(mut_seq)
@@ -125,6 +124,7 @@ def print_layer_expansion_info(layer, unique_cubes, dup_mut_seqs):
 
 def expand_mutation_tree(cube_size, n_layers, verbose=False):
     root_cube = Cube(N=cube_size)
+    noniso_muts = root_cube.get_nonisomorphic_mutations()
 
     unique_cubes = LayeredArray()
     unique_cubes.append(MutatedCube(root_cube))
@@ -134,7 +134,7 @@ def expand_mutation_tree(cube_size, n_layers, verbose=False):
     dup_mut_seqs.close_layer()
 
     for layer in range(1, n_layers + 1):
-        expand_layer(layer, unique_cubes, dup_mut_seqs)
+        expand_layer(layer, noniso_muts, unique_cubes, dup_mut_seqs)
         if verbose:
             print_layer_expansion_info(layer, unique_cubes, dup_mut_seqs)
 
