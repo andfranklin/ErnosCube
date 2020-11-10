@@ -889,19 +889,26 @@ class Cube:
         ]
         return mutations
 
-    def get_all_atomic_rotations(self):
-        """Returns all of atomic rotations that may be applied to the cube.
+    def get_atomic_mutations(self):
+        """Returns all atomic mutations that may be applied to the cube.
 
-        The list includes the rotation that does nothing, all rotations that
-        rotate the entire cube, and all rotations to each layer of the cube.
+        All of these rotations result in a cube that is not isomorphic.
         """
-        mutations = self.get_isomorphic_rotations()
-
+        mutations = []
         for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
             for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
                 for layer in range(self.N):
                     mutations.append(CubeRotation(axis, rot, layer))
+        return mutations
 
+    def get_all_atomic_manipulations(self):
+        """Returns all of atomic manipulations that may be applied to the cube.
+
+        The list includes the rotation that does nothing, all rotations that
+        rotate the entire cube, and rotations of each layer of the cube.
+        """
+        mutations = self.get_isomorphic_rotations()
+        mutations.extend(self.get_atomic_mutations())
         return mutations
 
     def apply_rotation_seq(self, seq):
@@ -914,7 +921,7 @@ class Cube:
 
     def scramble(self, N=20, seed=None):
         init_seed(seed)
-        all_mutations = self.get_all_atomic_rotations()
+        all_mutations = self.get_all_atomic_manipulations()
         layer_rotations = all_mutations[10:]
 
         sequence = []

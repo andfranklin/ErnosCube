@@ -2305,11 +2305,25 @@ class TestCube:
         with raises(AssertionError):
             cube.rotate(invalid_rotation)
 
-    @mark.dependency(name="get_all_atomic_rotations", depends=["construction"])
-    def test_get_all_atomic_rotations(self):
+    @mark.dependency(name="get_isomorphic_rotations", depends=["construction"])
+    def test_get_isomorphic_rotations(self):
         for N in range(1, 6):
             cube = Cube(N=N)
-            manipulations = cube.get_all_atomic_rotations()
+            manipulations = cube.get_isomorphic_rotations()
+            assert len(manipulations) == 10
+
+    @mark.dependency(name="get_atomic_mutations", depends=["construction"])
+    def test_get_atomic_mutations(self):
+        for N in range(1, 6):
+            cube = Cube(N=N)
+            manipulations = cube.get_atomic_mutations()
+            assert len(manipulations) == (9 * N)
+
+    @mark.dependency(name="get_all_atomic_manipulations", depends=["construction"])
+    def test_get_all_atomic_manipulations(self):
+        for N in range(1, 6):
+            cube = Cube(N=N)
+            manipulations = cube.get_all_atomic_manipulations()
             assert len(manipulations) == (9 * (N + 1)) + 1
 
     @mark.dependency(name="scramble", depends=["rotate"])
