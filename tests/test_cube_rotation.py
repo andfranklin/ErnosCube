@@ -1,5 +1,7 @@
-from ErnosCube.cube_rotation import AxisEnum, CubeRotation
+from ErnosCube.axis_enum import AxisEnum
 from ErnosCube.rotation_enum import RotationEnum
+from ErnosCube.cube_rotation import CubeRotation
+
 from strategies import axis_enums, rotation_enums, layers, cube_rotations
 from hypothesis import given
 from pytest import mark, raises
