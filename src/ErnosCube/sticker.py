@@ -42,6 +42,7 @@ class Sticker(PlaneRotatable):
     def __eq__(self, other):
         if self is other:
             return True
-        same_face = self.init_face_enum == other.init_face_enum
-        same_orient = self.orient_enum == other.orient_enum
-        return same_face and same_orient
+        return (
+            self.init_face_enum == other.init_face_enum
+            and self.orient_enum == other.orient_enum
+        )
