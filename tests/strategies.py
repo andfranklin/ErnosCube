@@ -4,7 +4,7 @@ from ErnosCube.sticker import Sticker
 from ErnosCube.cube import Cube
 from ErnosCube.rotation_enum import RotationEnum
 from ErnosCube.axis_enum import AxisEnum
-from ErnosCube.cube_rotation import CubeRotation
+from ErnosCube.cube_mutation import CubeMutation
 
 from hypothesis.strategies import sampled_from, builds, one_of
 from hypothesis.strategies import lists, integers
@@ -27,4 +27,4 @@ cubes_2 = builds(Cube, integers(min_value=2, max_value=2))
 axis_enums = sampled_from(list(AxisEnum.__members__.values()))
 rotation_enums = sampled_from(list(RotationEnum.__members__.values()))
 layers = integers(min_value=-1)
-cube_rotations = builds(CubeRotation, axis_enums, rotation_enums, layers)
+cube_mutations = builds(CubeMutation, axis_enums, rotation_enums, layers)

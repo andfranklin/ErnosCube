@@ -2,7 +2,7 @@ import click
 from ..cube import Cube
 from ..rotation_enum import RotationEnum
 from ..axis_enum import AxisEnum
-from ..cube_rotation import CubeRotation
+from ..cube_mutation import CubeMutation
 
 
 help_str = """There are two classes of interpreter commands: general commands
@@ -90,7 +90,7 @@ def cli(size, show):
                 show_before_prompt = False
                 continue
             else:
-                cube.rotate(CubeRotation(*data))
+                cube.mutate(CubeMutation(*data))
 
         elif tokens[0] == "scramble":
             show_before_prompt = show

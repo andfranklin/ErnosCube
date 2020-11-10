@@ -4,7 +4,7 @@ from .rotation_enum import RotationEnum
 
 
 @dataclass
-class CubeRotation:
+class CubeMutation:
     axis_enum: AxisEnum
     rotation_enum: RotationEnum
     layer: int
@@ -19,8 +19,8 @@ class CubeRotation:
             opposite_rotation = RotationEnum.CW
         else:
             opposite_rotation = self.rotation_enum
-        return CubeRotation(self.axis_enum, opposite_rotation, self.layer)
+        return CubeMutation(self.axis_enum, opposite_rotation, self.layer)
 
 
 # The identity element
-CubeRotation.e = CubeRotation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1)
+CubeMutation.e = CubeMutation(AxisEnum.NOTHING, RotationEnum.NOTHING, -1)

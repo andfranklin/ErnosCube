@@ -2,7 +2,7 @@ from .face_enum import FaceEnum
 from .face import Face
 from .sticker import Sticker
 from .orient_enum import OrientEnum
-from .cube_rotation import CubeRotation
+from .cube_mutation import CubeMutation
 from .axis_enum import AxisEnum
 from .rotation_enum import RotationEnum
 
@@ -787,8 +787,8 @@ class Cube:
         self.faces[FaceEnum.BACK] = front_face
         self.faces[FaceEnum.LEFT] = right_face
 
-    def rotate(self, rotation):
-        """Conducts a rotation of the cube prescribed by a `CubeRotation`.
+    def mutate(self, mutation):
+        """Conducts a mutation of the cube prescribed by a `CubeMutation`.
 
         The x-axis is orthogonal to the front and back faces. The positive
         direction of the x-axis is incident on the back face and exits the
@@ -805,92 +805,92 @@ class Cube:
         up face. The direction of rotation is defined with respect to
         the positive z-axis.
         """
-        assert isinstance(rotation, CubeRotation)
-        assert rotation.layer < self.N, f"layer={rotation.layer}, N={self.N}"
+        assert isinstance(mutation, CubeMutation)
+        assert mutation.layer < self.N, f"layer={mutation.layer}, N={self.N}"
 
-        if rotation.rotation_enum == RotationEnum.CW:
-            if rotation.axis_enum == AxisEnum.X:
-                if rotation.layer == -1:
+        if mutation.rotation_enum == RotationEnum.CW:
+            if mutation.axis_enum == AxisEnum.X:
+                if mutation.layer == -1:
                     self._cw_all_rotation_x()
                 else:
-                    self._cw_rotation_x(rotation.layer)
+                    self._cw_rotation_x(mutation.layer)
 
-            elif rotation.axis_enum == AxisEnum.Y:
-                if rotation.layer == -1:
+            elif mutation.axis_enum == AxisEnum.Y:
+                if mutation.layer == -1:
                     self._cw_all_rotation_y()
                 else:
-                    self._cw_rotation_y(rotation.layer)
+                    self._cw_rotation_y(mutation.layer)
 
-            else:  # rotation.axis_enum == AxisEnum.Z
-                if rotation.layer == -1:
+            else:  # mutation.axis_enum == AxisEnum.Z
+                if mutation.layer == -1:
                     self._cw_all_rotation_z()
                 else:
-                    self._cw_rotation_z(rotation.layer)
+                    self._cw_rotation_z(mutation.layer)
 
-        elif rotation.rotation_enum == RotationEnum.CCW:
-            if rotation.axis_enum == AxisEnum.X:
-                if rotation.layer == -1:
+        elif mutation.rotation_enum == RotationEnum.CCW:
+            if mutation.axis_enum == AxisEnum.X:
+                if mutation.layer == -1:
                     self._ccw_all_rotation_x()
                 else:
-                    self._ccw_rotation_x(rotation.layer)
+                    self._ccw_rotation_x(mutation.layer)
 
-            elif rotation.axis_enum == AxisEnum.Y:
-                if rotation.layer == -1:
+            elif mutation.axis_enum == AxisEnum.Y:
+                if mutation.layer == -1:
                     self._ccw_all_rotation_y()
                 else:
-                    self._ccw_rotation_y(rotation.layer)
+                    self._ccw_rotation_y(mutation.layer)
 
-            else:  # rotation.axis_enum == AxisEnum.Z
-                if rotation.layer == -1:
+            else:  # mutation.axis_enum == AxisEnum.Z
+                if mutation.layer == -1:
                     self._ccw_all_rotation_z()
                 else:
-                    self._ccw_rotation_z(rotation.layer)
+                    self._ccw_rotation_z(mutation.layer)
 
-        elif rotation.rotation_enum == RotationEnum.HT:
-            if rotation.axis_enum == AxisEnum.X:
-                if rotation.layer == -1:
+        elif mutation.rotation_enum == RotationEnum.HT:
+            if mutation.axis_enum == AxisEnum.X:
+                if mutation.layer == -1:
                     self._ht_all_rotation_x()
                 else:
-                    self._ht_rotation_x(rotation.layer)
+                    self._ht_rotation_x(mutation.layer)
 
-            elif rotation.axis_enum == AxisEnum.Y:
-                if rotation.layer == -1:
+            elif mutation.axis_enum == AxisEnum.Y:
+                if mutation.layer == -1:
                     self._ht_all_rotation_y()
                 else:
-                    self._ht_rotation_y(rotation.layer)
+                    self._ht_rotation_y(mutation.layer)
 
-            else:  # rotation.axis_enum == AxisEnum.Z
-                if rotation.layer == -1:
+            else:  # mutation.axis_enum == AxisEnum.Z
+                if mutation.layer == -1:
                     self._ht_all_rotation_z()
                 else:
-                    self._ht_rotation_z(rotation.layer)
+                    self._ht_rotation_z(mutation.layer)
 
-        else:  # rotation.rotation_enum == RotationEnum.NOTHING
+        else:  # mutation.rotation_enum == RotationEnum.NOTHING
             pass
 
-    def get_isomorphic_rotations(self):
-        """Returns all of the gross rotations that may be applied to the cube.
+    def get_isomorphic_mutations(self):
+        """Returns all isomorphic mutations that may be applied to a cube.
 
-        The list includes the rotation that does nothing and all rotations that
-        rotate the entire cube. All of these rotations will result in an
-        isomorphic cube.
+        The list includes the mutation that does nothing and all mutations that
+        rotate the entire cube. All of these mutations result in an isomorphic
+        cube.
         """
         mutations = [
-            CubeRotation.e,
-            CubeRotation(AxisEnum.X, RotationEnum.CW, -1),
-            CubeRotation(AxisEnum.X, RotationEnum.CCW, -1),
-            CubeRotation(AxisEnum.X, RotationEnum.HT, -1),
-            CubeRotation(AxisEnum.Y, RotationEnum.CW, -1),
-            CubeRotation(AxisEnum.Y, RotationEnum.CCW, -1),
-            CubeRotation(AxisEnum.Y, RotationEnum.HT, -1),
-            CubeRotation(AxisEnum.Z, RotationEnum.CW, -1),
-            CubeRotation(AxisEnum.Z, RotationEnum.CCW, -1),
-            CubeRotation(AxisEnum.Z, RotationEnum.HT, -1),
+            CubeMutation.e,
+            CubeMutation(AxisEnum.X, RotationEnum.CW, -1),
+            CubeMutation(AxisEnum.X, RotationEnum.CCW, -1),
+            CubeMutation(AxisEnum.X, RotationEnum.HT, -1),
+            CubeMutation(AxisEnum.Y, RotationEnum.CW, -1),
+            CubeMutation(AxisEnum.Y, RotationEnum.CCW, -1),
+            CubeMutation(AxisEnum.Y, RotationEnum.HT, -1),
+            CubeMutation(AxisEnum.Z, RotationEnum.CW, -1),
+            CubeMutation(AxisEnum.Z, RotationEnum.CCW, -1),
+            CubeMutation(AxisEnum.Z, RotationEnum.HT, -1),
         ]
         return mutations
 
-    def get_atomic_mutations(self):
-        """Returns all atomic mutations that may be applied to the cube.
+    def get_nonisomorphic_mutations(self):
+        """Returns all non-isomorphic mutations that may be applied to a cube.
 
         All of these rotations result in a cube that is not isomorphic.
         """
@@ -898,65 +898,64 @@ class Cube:
         for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
             for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
                 for layer in range(self.N):
-                    mutations.append(CubeRotation(axis, rot, layer))
+                    mutations.append(CubeMutation(axis, rot, layer))
         return mutations
 
-    def get_all_atomic_manipulations(self):
-        """Returns all of atomic manipulations that may be applied to the cube.
+    def get_all_mutations(self):
+        """Returns all atomic mutations that may be applied to the cube.
 
-        The list includes the rotation that does nothing, all rotations that
+        The list includes the mutation that does nothing, all rotations that
         rotate the entire cube, and rotations of each layer of the cube.
         """
-        mutations = self.get_isomorphic_rotations()
-        mutations.extend(self.get_atomic_mutations())
+        mutations = self.get_isomorphic_mutations()
+        mutations.extend(self.get_nonisomorphic_mutations())
         return mutations
 
-    def apply_rotation_seq(self, seq):
-        for rotation in seq:
-            self.rotate(rotation)
+    def apply_mutation_seq(self, seq):
+        for mutation in seq:
+            self.mutate(mutation)
 
-    def undo_rotation_seq(self, seq):
-        for rotation in reversed(seq):
-            self.rotate(rotation.inverse())
+    def undo_mutation_seq(self, seq):
+        for mutation in reversed(seq):
+            self.mutate(mutation.inverse())
 
     def scramble(self, N=20, seed=None):
         init_seed(seed)
-        all_mutations = self.get_all_atomic_manipulations()
-        layer_rotations = all_mutations[10:]
+        mutations = self.get_nonisomorphic_mutations()
 
         sequence = []
         for _ in range(N):
-            rotation = choice(layer_rotations)
-            self.rotate(rotation)
-            sequence.append(rotation)
+            mutation = choice(mutations)
+            self.mutate(mutation)
+            sequence.append(mutation)
 
         return sequence
 
     def _get_possible_iso_transform(self, other):
-        """Returns the possible sequence of rotations that make the objs equal.
+        """Returns the possible sequence of mutations that make the objs equal.
 
         Note, this method mutates the cube in the process of constructing the
         transformation list. However, the cube will be in it's original state
         by the time the function completes.
         """
         other_back = other.faces[FaceEnum.BACK]
-        for rotation_a in self.get_isomorphic_rotations():
-            self.rotate(rotation_a)
+        for mutation_a in self.get_isomorphic_mutations():
+            self.mutate(mutation_a)
             self_back = self.faces[FaceEnum.BACK]
-            plane_rotation = self_back.get_iso_transform(other_back)
-            self.rotate(rotation_a.inverse())
+            plane_mutation = self_back.get_iso_transform(other_back)
+            self.mutate(mutation_a.inverse())
 
-            if plane_rotation is not None:
-                if plane_rotation == RotationEnum.NOTHING:
-                    return [rotation_a]
+            if plane_mutation is not None:
+                if plane_mutation == RotationEnum.NOTHING:
+                    return [mutation_a]
                 else:
-                    rotation_b = CubeRotation(AxisEnum.X, plane_rotation, -1)
-                    return [rotation_a, rotation_b]
+                    mutation_b = CubeMutation(AxisEnum.X, plane_mutation, -1)
+                    return [mutation_a, mutation_b]
 
         return None
 
     def get_iso_transform(self, other):
-        """Returns the rotation sequence to reach the argument object.
+        """Returns the mutation sequence to reach the argument object.
 
         The transformation is encoded as a `RotationEnum`. If there is no
         isomorphic transformation between the two faces then this function
@@ -966,9 +965,9 @@ class Cube:
         if possible_iso_transform is None:
             return None
 
-        self.apply_rotation_seq(possible_iso_transform)
+        self.apply_mutation_seq(possible_iso_transform)
         cubes_are_isomorphic = self == other
-        self.undo_rotation_seq(possible_iso_transform)
+        self.undo_mutation_seq(possible_iso_transform)
 
         if cubes_are_isomorphic:
             return possible_iso_transform
