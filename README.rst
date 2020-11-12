@@ -23,6 +23,8 @@ Another Rubik's Cube simulator because ¯\\_(ツ)_/¯
 Features
 --------
 
+.. role:: del
+
 * Free software: MIT license
 * :del:`Can return a "hello world" string.`
 * Testing with pytest and hypothesis.
