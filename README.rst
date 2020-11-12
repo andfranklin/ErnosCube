@@ -23,13 +23,6 @@ Another Rubik's Cube simulator because ¯\\_(ツ)_/¯
 Features
 --------
 
-.. role:: strike
-    :class: strike
-
-.strike {
-  text-decoration: line-through;
-}
-
-* Free software: MIT license
-* :strike:`Can return a "hello world" string.`
-* Testing with pytest and hypothesis.
+* Sticker representation for 3D Rubik's cubes of arbitrary size.
+* Full specification of all legal mutations for a given cube.
+* A command-line interpreter.
