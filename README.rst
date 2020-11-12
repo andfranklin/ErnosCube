@@ -27,5 +27,5 @@ Features
     :class: strike
 
 * Free software: MIT license
-* :strike:\`Can return a "hello world" string.\`
+* :strike:`Can return a "hello world" string.`
 * Testing with pytest and hypothesis.
