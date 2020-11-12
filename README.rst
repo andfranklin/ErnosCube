@@ -26,6 +26,10 @@ Features
 .. role:: strike
     :class: strike
 
+.strike {
+  text-decoration: line-through;
+}
+
 * Free software: MIT license
 * :strike:`Can return a "hello world" string.`
 * Testing with pytest and hypothesis.
