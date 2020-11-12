@@ -24,5 +24,5 @@ Features
 --------
 
 * Free software: MIT license
-* Can return a "hello world" string.
+* <strike>Can return a "hello world" string.</strike>
 * Testing with pytest and hypothesis.
