@@ -2319,6 +2319,13 @@ class TestCube:
             manipulations = cube.get_nonisomorphic_mutations()
             assert len(manipulations) == (9 * N)
 
+    @mark.dependency(name="get_face_mutations", depends=["construction"])
+    def test_get_face_mutations(self):
+        for N in range(2, 6):
+            cube = Cube(N=N)
+            mutations = cube.get_face_mutations()
+            assert len(mutations) == 18
+
     @mark.dependency(name="get_all_mutations", depends=["construction"])
     def test_get_all_mutations(self):
         for N in range(1, 6):

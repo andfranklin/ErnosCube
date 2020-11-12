@@ -902,6 +902,19 @@ class Cube:
                     mutations.append(CubeMutation(axis, rot, layer))
         return mutations
 
+    def get_face_mutations(self):
+        """Returns all non-isomorphic mutations that may be applied to a cube.
+
+        All of these rotations result in a cube that is not isomorphic.
+        """
+        assert self.N > 1
+        mutations = []
+        for axis in [AxisEnum.X, AxisEnum.Y, AxisEnum.Z]:
+            for rot in [RotationEnum.CW, RotationEnum.CCW, RotationEnum.HT]:
+                for layer in [0, self.last_layer]:
+                    mutations.append(CubeMutation(axis, rot, layer))
+        return mutations
+
     def get_all_mutations(self):
         """Returns all atomic mutations that may be applied to the cube.
 
