@@ -80,9 +80,27 @@ def is_duplicate(mut_seq, dup_mut_seqs):
     return False
 
 
-def is_essentially_unique(cube, unique_cubes):
-    for unique_cube in unique_cubes.data:
-        if cube.is_isomorphic(unique_cube.cube):
+def is_essentially_unique(candidate, layer, unique_cubes):
+    """This function returns True if the cube is, so far, essentially unique.
+
+    In general, a cube is essentially unique in comparison with a collection of
+    cubes if it is not isomorphic to any of the cubes in the collection.
+
+    A naïve implementation of this function would compare the candidate with
+    every cube inserted into the mutation tree thus far. This function does not
+    do that. Rather, the cube is compared with all cubes inserted thus far in
+    the current layer, and all cubes in the previous two layers.
+
+    Justification: In general, a cube at layer N (for N>0) mutated by 1 turn
+    may result in a cube at layer N-1, N or N+1. A candidate cube at layer N+1
+    only needs to be compared against the previous 2 layers since it is
+    impossible that a cube isomorphic to the candidate would exist in layer
+    N-2.
+    """
+    minimum_layer = max(0, layer - 2)
+    comparison_start = unique_cubes.get_layer_slice(minimum_layer).start
+    for unique_cube in unique_cubes.data[comparison_start:]:
+        if candidate.is_isomorphic(unique_cube.cube):
             return False
     return True
 
@@ -98,7 +116,7 @@ def expand_layer(layer, mutation_basis, unique_cubes, dup_mut_seqs):
 
             else:
                 with MutationContext(parent_cube_copy, mutation) as candidate:
-                    if is_essentially_unique(candidate, unique_cubes):
+                    if is_essentially_unique(candidate, layer, unique_cubes):
                         child = MutatedCube(
                             candidate, parent=parent, mutation=mutation, mut_seq=mut_seq
                         )
