@@ -2,9 +2,8 @@ from ErnosCube.cube import Cube
 from copy import deepcopy
 
 
-class MutatedCube:
-    def __init__(self, cube, parent=None, mutation=None, mut_seq=None):
-        self.cube = cube
+class MutationNode:
+    def __init__(self, parent, mutation, mut_seq):
         self.parent = parent
         self.mutation = mutation
         self.children = []
@@ -28,6 +27,12 @@ class MutatedCube:
             return [mutation]
         else:
             return [*self.mut_seq, mutation]
+
+
+class MutatedCube:
+    def __init__(self, cube, parent=None, mutation=None, mut_seq=None):
+        self.cube = cube
+        self.mutation_node = MutationNode(parent, mutation, mut_seq)
 
 
 class LayeredArray:
@@ -97,7 +102,7 @@ def expand_layer(layer, mutation_basis, unique_cubes, dup_mut_seqs):
     for parent in parents:
         candidate = deepcopy(parent.cube)
         for mutation in mutation_basis:
-            mut_seq = parent.make_mut_seq(mutation)
+            mut_seq = parent.mutation_node.make_mut_seq(mutation)
             if is_duplicate(mut_seq, dup_mut_seqs):
                 dup_mut_seqs.append(mut_seq)
 
@@ -106,7 +111,7 @@ def expand_layer(layer, mutation_basis, unique_cubes, dup_mut_seqs):
                 if is_essentially_unique(candidate, layer, unique_cubes):
                     child = MutatedCube(
                         deepcopy(candidate),
-                        parent=parent,
+                        parent=parent.mutation_node,
                         mutation=mutation,
                         mut_seq=mut_seq,
                     )
