@@ -2,19 +2,6 @@ from ErnosCube.cube import Cube
 from copy import deepcopy
 
 
-class MutationContext:
-    def __init__(self, cube, mutation):
-        self.cube = cube
-        self.mutation = mutation
-
-    def __enter__(self):
-        self.cube.mutate(self.mutation)
-        return self.cube
-
-    def __exit__(self, type, value, traceback):
-        self.cube.mutate(self.mutation.inverse())
-
-
 class MutatedCube:
     def __init__(self, cube, parent=None, mutation=None, mut_seq=None):
         self.cube = deepcopy(cube)
@@ -108,21 +95,22 @@ def is_essentially_unique(candidate, layer, unique_cubes):
 def expand_layer(layer, mutation_basis, unique_cubes, dup_mut_seqs):
     parents = unique_cubes.get_layer(layer - 1)
     for parent in parents:
-        parent_cube_copy = deepcopy(parent.cube)
+        candidate = deepcopy(parent.cube)
         for mutation in mutation_basis:
             mut_seq = parent.make_mut_seq(mutation)
             if is_duplicate(mut_seq, dup_mut_seqs):
                 dup_mut_seqs.append(mut_seq)
 
             else:
-                with MutationContext(parent_cube_copy, mutation) as candidate:
-                    if is_essentially_unique(candidate, layer, unique_cubes):
-                        child = MutatedCube(
-                            candidate, parent=parent, mutation=mutation, mut_seq=mut_seq
-                        )
-                        unique_cubes.append(child)
-                    else:
-                        dup_mut_seqs.append(mut_seq)
+                candidate.mutate(mutation)
+                if is_essentially_unique(candidate, layer, unique_cubes):
+                    child = MutatedCube(
+                        candidate, parent=parent, mutation=mutation, mut_seq=mut_seq
+                    )
+                    unique_cubes.append(child)
+                else:
+                    dup_mut_seqs.append(mut_seq)
+                candidate.mutate(mutation.inverse())
     unique_cubes.close_layer()
     dup_mut_seqs.close_layer()
 
