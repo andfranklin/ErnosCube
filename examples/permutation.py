@@ -4,7 +4,7 @@ from copy import deepcopy
 
 class MutatedCube:
     def __init__(self, cube, parent=None, mutation=None, mut_seq=None):
-        self.cube = deepcopy(cube)
+        self.cube = cube
         self.parent = parent
         self.mutation = mutation
         self.children = []
@@ -105,7 +105,10 @@ def expand_layer(layer, mutation_basis, unique_cubes, dup_mut_seqs):
                 candidate.mutate(mutation)
                 if is_essentially_unique(candidate, layer, unique_cubes):
                     child = MutatedCube(
-                        candidate, parent=parent, mutation=mutation, mut_seq=mut_seq
+                        deepcopy(candidate),
+                        parent=parent,
+                        mutation=mutation,
+                        mut_seq=mut_seq,
                     )
                     unique_cubes.append(child)
                 else:
@@ -130,7 +133,7 @@ def print_layer_expansion_info(layer, unique_cubes, dup_mut_seqs):
 
 def expand_mutation_tree(root_cube, mutation_basis, n_layers, verbose=False):
     unique_cubes = LayeredArray()
-    unique_cubes.append(MutatedCube(root_cube))
+    unique_cubes.append(MutatedCube(deepcopy(root_cube)))
     unique_cubes.close_layer()
 
     dup_mut_seqs = LayeredArray()
