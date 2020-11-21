@@ -3,27 +3,25 @@ from copy import deepcopy
 
 
 class MutationNode:
-    def __init__(self, parent=None, mutation=None, mut_seq=None):
+    def __init__(self, parent, mutation, mut_seq):
         self.parent = parent
         self.mutation = mutation
         self.children = []
 
-        if self.parent is None:
-            assert self.mutation is None
+        if parent is None:
+            assert mutation is None
             assert mut_seq is None
             self.mut_seq = []
+
         else:
-            assert self.mutation is not None
-            self.parent.children.append(self)
-            if mut_seq is None:
-                self.mut_seq = self.parent.make_mut_seq(self.mutation)
-            else:
-                assert mut_seq[-1] == self.mutation
-                self.mut_seq = mut_seq
+            assert mutation is not None
+            assert mut_seq is not None
+            assert mut_seq[-1] == mutation
+            self.mut_seq = mut_seq
+            parent.children.append(self)
 
     def make_mut_seq(self, mutation):
         if self.parent is None:
-            assert self.mut_seq == []
             return [mutation]
         else:
             return [*self.mut_seq, mutation]
@@ -136,7 +134,7 @@ def print_layer_expansion_info(layer, unique_cubes, dup_mut_seqs):
 
 def expand_mutation_tree(root_cube, mutation_basis, n_layers, verbose=False):
     unique_cubes = LayeredArray()
-    mutation_node = MutationNode()
+    mutation_node = MutationNode(None, None, None)
     unique_cubes.append(MutatedCube(deepcopy(root_cube), mutation_node))
     unique_cubes.close_layer()
 
