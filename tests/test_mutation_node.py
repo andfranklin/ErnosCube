@@ -4,7 +4,7 @@ from pytest import mark
 
 
 class TestMutationNode:
-    """Collection of all tests run on instances of the LayeredArray."""
+    """Collection of all tests run on instances of the MutationNode."""
 
     @mark.dependency(name="construction_1")
     def test_construction_1(self):

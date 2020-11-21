@@ -1,13 +1,8 @@
 from ErnosCube.cube import Cube
 from ErnosCube.layered_array import LayeredArray
 from ErnosCube.mutation_node import MutationNode
+from ErnosCube.mutated_cube import MutatedCube
 from copy import deepcopy
-
-
-class MutatedCube:
-    def __init__(self, cube, mutation_node):
-        self.cube = cube
-        self.mutation_node = mutation_node
 
 
 def is_duplicate(mut_seq, dup_mut_seqs):
